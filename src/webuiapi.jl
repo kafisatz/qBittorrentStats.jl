@@ -60,6 +60,10 @@ function auth_login(baseurl;username="admin",password=nothing)
     if responseBody != "Ok."
         @show responseBody
     end
+    if responseBody == "Fails."
+       throw(ErrorException("Wrong username or password."))
+    end
+    
     @assert 200 == http_status
     responseHeaders = curl.userdata[:responseHeaders]
     
@@ -77,6 +81,5 @@ function auth_login(baseurl;username="admin",password=nothing)
     nm,val = split(cookie,"=")
     cookieDict = Dict(nm=>val)
 
-return cookie,cookieDict
-
+    return cookie,cookieDict
 end

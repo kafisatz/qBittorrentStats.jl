@@ -8,6 +8,8 @@ import JSON3
 baseurl = "http://10.14.15.205:8080"
 
 @time cookie,cookieDict = auth_login(baseurl)
+
+
 @time res = version(baseurl,cookieDict)
 res = webapiVersion(baseurl,cookieDict)
 @time js = gettorrents(baseurl,cookieDict);
@@ -20,4 +22,6 @@ size(jsproperties)
 jsproperties[1]
 #@show sort(collect(keys(js[1])))
 
-println(c)
+
+cookieDictdoesnotwork = Dict("SID"=>"1234567890")
+@time res = version(baseurl,cookieDictdoesnotwork)
