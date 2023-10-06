@@ -1,6 +1,6 @@
 using Revise
 using qBittorrentStats
-import CurlHTTP 
+import CurlHTTP
 import HTTP
 import JSON3
 
@@ -8,7 +8,6 @@ import JSON3
 baseurl = "http://10.14.15.205:8080"
 
 @time cookie,cookieDict = auth_login(baseurl)
-
 
 @time res = version(baseurl,cookieDict)
 res = webapiVersion(baseurl,cookieDict)
@@ -21,6 +20,10 @@ h = js[1].hash
 size(jsproperties)
 jsproperties[1]
 #@show sort(collect(keys(js[1])))
+
+nms = sort(collect(keys(jsproperties[1])))
+nms_interest = ["addition_date","completion_date","hash","is_private","name","seeding_time","share_ratio","time_elapsed","total_downloaded"," total_downloaded_session"," total_size","total_uploaded","total_uploaded_session"]
+#add double quotes to above line 
 
 
 cookieDictdoesnotwork = Dict("SID"=>"1234567890")
