@@ -52,8 +52,10 @@ function main_internal(baseurl::String,influxdbbucketname::String,influxdbsettin
     df = DataFrames.DataFrame(jsproperties)
     #add current timestamp (UTC)
     df[!,:datetime] .= Dates.now(Dates.UTC)
-    tags = ["is_private"]
-    fields = ["addition_date","completion_date","hash","name","seeding_time","share_ratio","time_elapsed","total_downloaded","total_downloaded_session","total_size","total_uploaded","total_uploaded_session"]
+    #is private -> 1, else 0
+    df[!,:is_private] .= ifelse.(df.is_private,1,0)
+    tags = ["is_private","name","hash"]
+    fields = ["addition_date","completion_date","seeding_time","share_ratio","time_elapsed","total_downloaded","total_downloaded_session","total_size","total_uploaded","total_uploaded_session"]
     DataFrames.select!(df,vcat("datetime",tags,fields))
 
     ##################################################################
