@@ -1,14 +1,14 @@
 export writestats 
-function writestats(baseurl::String,influxdbbucketname::String,influxdbsettings::Dict{String,String};cookieDict=nothing,username="admin",password=nothing)
+function writestats(baseurl::String,influxdbbucketname::String,influxdbsettings::Dict{String,String};cookieDict=nothing,username="admin",password=nothing,uptimekumaurl="")
     try 
-        return main_internal(baseurl,influxdbbucketname,influxdbsettings,cookieDict=cookieDict,username=username,password=password)
+        return main_internal(baseurl,influxdbbucketname,influxdbsettings,cookieDict=cookieDict,username=username,password=password,uptimekumaurl=uptimekumaurl)
     catch e
         @show e
         return nothing
     end
 end
 
-function main_internal(baseurl::String,influxdbbucketname::String,influxdbsettings::Dict{String,String};cookieDict=nothing,username="admin",password=nothing)
+function main_internal(baseurl::String,influxdbbucketname::String,influxdbsettings::Dict{String,String};cookieDict=nothing,username="admin",password=nothing,uptimekumaurl="")
     if isnothing(cookieDict)
         cookie,cookieDict = auth_login(baseurl,username=username,password=password)
     end
@@ -77,6 +77,11 @@ function main_internal(baseurl::String,influxdbbucketname::String,influxdbsettin
 
     if !in(rs,[200,204])
         @warn "Unexpected return value. Data may not have been written to InfluxDB" rs
+    end
+
+    #set uptimkuma status 
+    if uptimekumaurl != ""
+        HTTP.get(uptimekumaurl)
     end
 
     return cookieDict
