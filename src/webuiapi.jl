@@ -10,7 +10,7 @@ end
 function properties(baseurl,cookieDict,h::Vector{String})
     return map(x->properties(baseurl,cookieDict,x),h)
 end
-
+ 
 export gettorrents
 function gettorrents(baseurl,cookieDict)
     url = string(baseurl,"/api/v2/torrents/info")
