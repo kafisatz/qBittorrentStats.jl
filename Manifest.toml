@@ -126,11 +126,11 @@ version = "1.10.0"
 
 [[deps.InfluxDBClient]]
 deps = ["CSV", "CodecZlib", "DataFrames", "Dates", "HTTP", "JSON3", "Random", "TimeZones", "UnPack"]
-git-tree-sha1 = "2aeeed8d9e8ee834530347c453a852289810e853"
+git-tree-sha1 = "33cc5a324c13bffc9c285e22bb342b9a65d0e056"
 repo-rev = "main"
 repo-url = "https://github.com/kafisatz/InfluxDBClient.jl"
 uuid = "7a087161-7d97-4627-bbdd-0c82161d9408"
-version = "0.1.2"
+version = "0.1.3"
 
 [[deps.InlineStrings]]
 deps = ["Parsers"]

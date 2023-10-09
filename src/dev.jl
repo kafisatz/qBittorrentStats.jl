@@ -7,3 +7,6 @@ influxdbbucketname = "qBittorrentStats"
 influxdbsettings = InfluxDBClient.get_settings()
 
 @time cookieDict = writestats(baseurl,influxdbbucketname,influxdbsettings)
+
+dfstats = stats(influxdbsettings)
+CSV.write(raw"C:\temp\stats.csv",dfstats)

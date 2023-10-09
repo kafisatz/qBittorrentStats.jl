@@ -14,7 +14,7 @@
 * For me this is currently not working when I use a https URL (reverse proxy). Instead I am using the IP of the client
 
 ## Grafana Dashboard
-* see `grafana_dashboard.json`(graphana_dashboard.json) and [dashboard.png](img/dashboard.png)
+* see [grafana_dashboard.json](graphana_dashboard.json) and [dashboard.png](img/dashboard.png)
 
 ## Usage
 ```julia

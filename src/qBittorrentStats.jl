@@ -5,7 +5,7 @@ import HTTP
 import JSON3
 import DataFrames
 import InfluxDBClient
-import Dates
+using Dates
 
 # Write your package code here.
 include("webuiauth.jl")
