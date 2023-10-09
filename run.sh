@@ -66,6 +66,7 @@ echo_title status=$status
     docker rm $containerid
     sleep 1
   fi
+  docker stop $tag || true && docker rm $tag || true
   need_start=true
 #elif [ -z "$status" ] ; then
 #  need_start=true
