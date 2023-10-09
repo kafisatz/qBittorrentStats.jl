@@ -12,5 +12,6 @@ include("webuiauth.jl")
 include("webuiapi.jl")
 include("influx.jl")
 include("main.jl")
+include("query.jl")
 
 end

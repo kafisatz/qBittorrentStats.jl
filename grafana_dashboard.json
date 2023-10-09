@@ -1,0 +1,289 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 26,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "cf7a14cc-0cc5-408c-8de4-499e03562577"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "decgbytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 0,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "cf7a14cc-0cc5-408c-8de4-499e03562577"
+          },
+          "query": "import \"math\"\r\n\r\nFirst = from(bucket: \"qBittorrentStats\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_field\"] == \"total_uploaded\")\r\n  //|> drop(columns: [\"hash\", \"_measurement\",\"is_private\"])    \r\n  |> first()  \r\n  //|> yield(name:\"First\")  \r\n\r\nLast = from(bucket: \"qBittorrentStats\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_field\"] == \"total_uploaded\")  \r\n  //|> drop(columns: [\"hash\", \"_measurement\",\"is_private\"])    \r\n  |> last()\r\n  //|> yield(name:\"Last\")\r\n  \r\nunion(tables: [Last,First])\r\n|> sort(columns: [\"_value\"], desc: false)\r\n  |> difference()\r\n  |> drop(columns: [\"hash\", \"_measurement\",\"is_private\"]) \r\n  // convert Bytes to Gigabytes\r\n  |> map(fn: (r) => ({r with _value: float(v: r._value) / 1073741824.0}))\r\n  //|> map(fn: (r) => ({r with _value: math.round(x: r._value * 10.0) / 10.0}))\r\n  |> sort(columns: [\"_value\"], desc: false)  \r\n  |> drop(columns: [\"_start\", \"_stop\"]) \r\n  |> filter(fn: (r) => r._value != 0.0)  \r\n  |> rename(columns: {_value: \"uploaded [GB]\",_time: \"last timestamp\"})\r\n  |> drop(columns: [\"_field\"]) \r\n  |> sort(columns: [\"uploaded [GB]\"], desc: true) \r\n  |> group()\r\n  |> sum(column: \"uploaded [GB]\")  \r\n\r\n  \r\n  //|> sum(column: \"uploaded [GB]\")  ",
+          "refId": "A"
+        }
+      ],
+      "title": "Total Uploaded [GB]",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "cf7a14cc-0cc5-408c-8de4-499e03562577"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "decgbytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 4,
+        "y": 0
+      },
+      "id": 3,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "cf7a14cc-0cc5-408c-8de4-499e03562577"
+          },
+          "query": "import \"math\"\r\n\r\nFirst = from(bucket: \"qBittorrentStats\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_field\"] == \"total_downloaded\")\r\n  //|> drop(columns: [\"hash\", \"_measurement\",\"is_private\"])    \r\n  |> first()  \r\n  //|> yield(name:\"First\")  \r\n\r\nLast = from(bucket: \"qBittorrentStats\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_field\"] == \"total_downloaded\")  \r\n  //|> drop(columns: [\"hash\", \"_measurement\",\"is_private\"])    \r\n  |> last()\r\n  //|> yield(name:\"Last\")\r\n  \r\nunion(tables: [Last,First])\r\n|> sort(columns: [\"_value\"], desc: false)\r\n  |> difference()\r\n  |> drop(columns: [\"hash\", \"_measurement\",\"is_private\"]) \r\n  // convert Bytes to Gigabytes\r\n  |> map(fn: (r) => ({r with _value: float(v: r._value) / 1073741824.0}))\r\n  //|> map(fn: (r) => ({r with _value: math.round(x: r._value * 10.0) / 10.0}))\r\n  |> sort(columns: [\"_value\"], desc: false)  \r\n  |> drop(columns: [\"_start\", \"_stop\"]) \r\n  |> filter(fn: (r) => r._value != 0.0)  \r\n  |> rename(columns: {_value: \"downloaded [GB]\",_time: \"last timestamp\"})\r\n  |> drop(columns: [\"_field\"]) \r\n  |> sort(columns: [\"downloaded [GB]\"], desc: true) \r\n  |> group()\r\n  |> sum(column: \"downloaded [GB]\")  \r\n\r\n  \r\n  //|> sum(column: \"downloaded [GB]\")  ",
+          "refId": "A"
+        }
+      ],
+      "title": "Total Downloaded [GB]",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "cf7a14cc-0cc5-408c-8de4-499e03562577"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "decimals": 1,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "uploaded [GB]"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 125
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "name"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 712
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "last timestamp"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 229
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 25,
+        "w": 10,
+        "x": 0,
+        "y": 5
+      },
+      "id": 1,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "9.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "cf7a14cc-0cc5-408c-8de4-499e03562577"
+          },
+          "query": "import \"math\"\n\nFirst = from(bucket: \"qBittorrentStats\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_field\"] == \"total_uploaded\")\n  //|> drop(columns: [\"hash\", \"_measurement\",\"is_private\"])    \n  |> first()  \n  //|> yield(name:\"First\")  \n\nLast = from(bucket: \"qBittorrentStats\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_field\"] == \"total_uploaded\")  \n  //|> drop(columns: [\"hash\", \"_measurement\",\"is_private\"])    \n  |> last()\n  //|> yield(name:\"Last\")\n  \nunion(tables: [Last,First])\n|> sort(columns: [\"_value\"], desc: false)\n  |> difference()\n  |> drop(columns: [\"hash\", \"_measurement\",\"is_private\"]) \n  // convert Bytes to Gigabytes\n  |> map(fn: (r) => ({r with _value: float(v: r._value) / 1073741824.0}))\n  //|> map(fn: (r) => ({r with _value: math.round(x: r._value * 10.0) / 10.0}))\n  |> sort(columns: [\"_value\"], desc: false)  \n  |> drop(columns: [\"_start\", \"_stop\"]) \n  |> filter(fn: (r) => r._value != 0.0)  \n  |> rename(columns: {_value: \"uploaded [GB]\",_time: \"last timestamp\"})\n  |> drop(columns: [\"_field\"]) \n  |> sort(columns: [\"uploaded [GB]\"], desc: true)  \n  |> group()\n  |> sort(columns: [\"uploaded [GB]\"], desc: true)  \n  //|> sum(column: \"uploaded [GB]\")  ",
+          "refId": "A"
+        }
+      ],
+      "title": "Panel Title",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "indexByName": {
+              "last timestamp": 2,
+              "name": 0,
+              "uploaded [GB]": 1
+            },
+            "renameByName": {}
+          }
+        }
+      ],
+      "type": "table"
+    }
+  ],
+  "refresh": false,
+  "schemaVersion": 38,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-2d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "qBittorrentStats",
+  "uid": "ebcdd21d-f1e1-4a51-adf3-ffa34959180e",
+  "version": 10,
+  "weekStart": ""
+}
