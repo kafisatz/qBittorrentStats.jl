@@ -4,7 +4,7 @@
 FROM julia:1.9.3-alpine
 
 # mark it with a label, so we can remove dangling images
-LABEL cicd="qBittorrentStats"
+LABEL cicd="qbittorrentstats"
 
 #https://vsupalov.com/buildkit-cache-mount-dockerfile/
 ENV PIP_CACHE_DIR=/var/cache/buildkit/pip
