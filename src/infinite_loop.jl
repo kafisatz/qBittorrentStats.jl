@@ -2,7 +2,7 @@ using Pkg
 Pkg.activate(".")
 Pkg.instantiate()
 
-#using Revise;
+#using Revise; 
 using Dates
 using qBittorrentStats;import InfluxDBClient
 #import CurlHTTP;import HTTP;import JSON3;using DataFrames; ; 
