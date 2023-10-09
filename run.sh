@@ -61,7 +61,10 @@ echo_title status=$status
     echo_title containerid=$containerid
     echo_title "STOPPING RUNNING CONTAINER containerid=$containerid"    
     docker stop $containerid -t $stop_timeout
-    sleep 3 #wait a couple of seconds
+    sleep 2 #wait a couple of seconds
+    #remove container 
+    docker rm $containerid
+    sleep 1
   fi
   need_start=true
 #elif [ -z "$status" ] ; then
