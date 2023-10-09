@@ -13,6 +13,15 @@ influxdbbucketname = "qBittorrentStats"
 influxdbsettings = InfluxDBClient.get_settings()
 uptimekumaurl = "https://uptimekuma.diro.ch/api/push/NVYbzSfPBb?status=up&msg=OK&ping=2" #optional
 
+@info("Testing InfluxDB access")
+try 
+    bucket_names, json = InfluxDBClient.get_buckets(influxdbsettings);
+    @show bucket_names
+catch e 
+    @show e 
+    @warn("Failed to access InfluxDB. See above!")
+end
+
 nsecsleep = 60
 while true 
     @time cookieDict = writestats(baseurl,influxdbbucketname,influxdbsettings,uptimekumaurl=uptimekumaurl)
