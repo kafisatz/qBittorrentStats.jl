@@ -76,10 +76,11 @@ elif [ "$need_build" == "true" ]; then
   #docker build . -t $tag #NO ARGUMENTS
   docker build . --build-arg INFLUXDB_URL=$INFLUXDB_URL --build-arg INFLUXDB_ORG=$INFLUXDB_ORG --build-arg INFLUXDB_TOKEN=$INFLUXDB_TOKEN --build-arg QBITTORRENT_PASSWORD=$QBITTORRENT_PASSWORD -t $tag
   #docker-compose up -d
-  docker run -d --restart unless-stopped -t $tag --name $tag #name sets the container name to run, tag references the image name
+  #NOTE -t is 'Allocate a pseudo-tty' it has nothing to do with the tag
+  docker run -d --restart unless-stopped -t --name $tag $tag #name sets the container name to run, tag references the image name, the last '$tag' is the image name to be run
 else
   echo_title "STARTING CONTAINER"
-  docker run -d --restart unless-stopped -t $tag --name $tag #name sets the container name to run, tag references the image name
+  docker run -d --restart unless-stopped -t --name $tag $tag #name sets the container name to run, tag references the image name, the last '$tag' is the image name to be run
 fi
 
 echo_title "Cleaning up --filter "label=cicd=$tag""
