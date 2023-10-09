@@ -13,6 +13,12 @@ influxdbbucketname = "qBittorrentStats"
 influxdbsettings = InfluxDBClient.get_settings()
 uptimekumaurl = "https://uptimekuma.diro.ch/api/push/NVYbzSfPBb?status=up&msg=OK&ping=2" #optional
 
+#the script will not run without these
+@assert haskey(ENV,"INFLUXDB_URL")
+@assert haskey(ENV,"INFLUXDB_ORG")
+@assert haskey(ENV,"INFLUXDB_TOKEN")
+@assert haskey(ENV,"QBITTORRENT_PASSWORD")
+
 @info("Testing InfluxDB access")
 try 
     bucket_names, json = InfluxDBClient.get_buckets(influxdbsettings);
