@@ -213,3 +213,14 @@ function mostrecenttimestamp(influxdbsettings,baseurl)
 
     return age_of_ts_in_seconds
 end
+
+
+export candidates_for_deletion
+function candidates_for_deletion(influxdbsettings,baseurl,di)
+    dfstats = stats(influxdbsettings,baseurl,di = di)
+    #filter for interesting bits
+    data = filter(x->x.torrent_exists == 1,dfstats)
+    filter!(x->x.GBuplastYear <= 0,data)
+    sort!(data,:size_in_GB)
+    return data 
+end

@@ -66,15 +66,21 @@ function deletetorrent(h::String,baseurl::String;cookieDict=nothing,username="ad
         cookie,cookieDict = auth_login(baseurl,username=username,password=password)
     end
 
-    urlwithhash = baseurl * "/api/v2/torrents/delete?hashes=" * h * "&deleteFiles=" * string(deletefiles)
-    urlwithhash = baseurl * "/api/v2/torrents/delete?hashes=" * h
-    r = HTTP.request("GET",urlwithhash,cookies=cookieDict);
-    js = JSON3.read(r.body);
-    return js
-
-    #baseurl,hash::String)
-    @error("in the works")    
-    #/api/v2/torrents/delete?hashes=8c212779b4abde7c6bc608063a0d008b7e40ce32&deleteFiles=false
+    #note: contrary to the webui documentation, this needs to be POST request
+    url = baseurl * "/api/v2/torrents/delete"
+    #bdy = Dict("deleteFiles"=>string(deletefiles),"hashes"=>h)
+    #HTTP Post request are not working for some reason.....
+    #r = HTTP.request("POST",url,[],bdy,cookies=cookieDict)
+    
+    #using CurlHTTP for now:
+    curl = CurlHTTP.CurlEasy(url=url,method=CurlHTTP.POST,verbose=false)
+    requestBody = "hashes=$(h)&deleteFiles=$(deletefiles)"
+    @assert length(cookieDict) == 1
+    headers = ["Cookie: $(first(keys(cookieDict)))=$(first(values(cookieDict)))"]
+    #requestBody = "{\"hashes\":\"$h\",\"deleteFiles\":$deletefiles}"
+    #println(requestBody)
+    res, http_status, errormessage = CurlHTTP.curl_execute(curl, requestBody, headers)
+    @assert http_status == 200
     return res 
 end
 
