@@ -9,6 +9,11 @@ function writestats(baseurl::String,influxdbbucketname::String,influxdbsettings:
 end
 
 function main_internal(baseurl::String,influxdbbucketname::String,influxdbsettings::Dict{String,String};cookieDict=nothing,username="admin",password=nothing,uptimekumaurl="")
+    #=
+        username = "admin"
+        pw = ENV["QBITTORRENT_PASSWORD"]
+        password = pw
+    =#
     if isnothing(cookieDict)
         cookie,cookieDict = auth_login(baseurl,username=username,password=password)
     end
@@ -34,6 +39,8 @@ function main_internal(baseurl::String,influxdbbucketname::String,influxdbsettin
     #get list of torrents
     ##################################################################
     js = gettorrents(baseurl,cookieDict);
+    #storing magnet URIs, this writes to a different measurement "$(baseurl)_magnetURIs"
+    storemagneturis(js,influxdbsettings,baseurl,influxdbbucketname)
 
     #if there are no torrents, we are done
     if iszero(length(js))

@@ -35,3 +35,27 @@ function version(baseurl,cookieDict)
     res = String(r.body)
     return res 
 end
+
+export storemagneturis
+function storemagneturis(js,influxdbsettings,baseurl,influxdbbucketname)
+    #let us store all mangnet URIs in a separate measurement
+    meas = baseurl * "_magnetURIs"
+
+    #@show js[1]
+    keepnames = ["name","hash","infohash_v2","magnet_uri","last_activity","size","total_size","tracker","trackers_count"]
+    df = DataFrames.DataFrame(js)
+    
+    select!(df,keepnames)
+    fixed_datetime = DateTime(Date(2020,1,1))
+    df[!,:datetime] .= fixed_datetime
+    tags = ["name","hash"]
+    fields = setdiff(names(df),vcat(["datetime"],tags))
+    rs,lp = InfluxDBClient.write_dataframe(settings=influxdbsettings,bucket=influxdbbucketname,measurement=meas,data=df,fields=fields,tags=tags,timestamp=:datetime);
+    return rs
+end
+
+export deletetorrent
+function deletetorrent()
+    @error("in the works")    
+    return res 
+end
