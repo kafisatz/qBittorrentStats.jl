@@ -34,7 +34,7 @@ function version(baseurl,cookieDict)
     r = HTTP.request("GET",url,cookies=cookieDict);
     res = String(r.body)
     return res 
-end
+end 
 
 export storemagneturis
 function storemagneturis(js,influxdbsettings,baseurl,influxdbbucketname)
