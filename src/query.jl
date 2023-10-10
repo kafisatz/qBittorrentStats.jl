@@ -220,7 +220,9 @@ function candidates_for_deletion(influxdbsettings,baseurl,di)
     dfstats = stats(influxdbsettings,baseurl,di = di)
     #filter for interesting bits
     data = filter(x->x.torrent_exists == 1,dfstats)
-    filter!(x->x.GBuplastYear <= 0,data)
+    col = filter(x->startswith(x,"GBup"),names(data))
+    @assert length(col) == 1
+    filter!(x->x[col[1]] <= 0,data)
     sort!(data,:size_in_GB)
-    return data 
+    return data,dfstats
 end
