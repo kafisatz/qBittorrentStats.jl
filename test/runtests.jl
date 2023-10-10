@@ -5,4 +5,5 @@ using Test
     # Write your tests here.
 
     include("webuiapi.jl")
+    include("local_tests_wrapper.jl")
 end

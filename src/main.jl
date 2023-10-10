@@ -9,12 +9,23 @@ function writestats(baseurl::String,influxdbbucketname::String,influxdbsettings:
 end
 
 export main_internal 
-function main_internal(baseurl::String,influxdbbucketname::String,influxdbsettings::Dict{String,String};cookieDict=nothing,username="admin",password=nothing,uptimekumaurl="")
+function main_internal(baseurl::String,influxdbbucketname::String,influxdbsettings::Dict{String,String};cookieDict=nothing,username="admin",password=nothing,uptimekumaurl="",printtime=true)
     #=
         username = "admin"
         pw = ENV["QBITTORRENT_PASSWORD"]
         password = pw
     =#
+    if printtime
+        ts = string(round(Dates.now(Dates.TimeZone("Europe/Zurich")),Dates.Second))
+        loc = findfirst("+",ts)
+        if !isnothing(loc)
+            ts2 = ts[1:loc[1]-1]
+        else 
+            ts2 = ts 
+        end
+        @info("Europe/Zurich now = $(ts2)")
+    end
+
     if isnothing(cookieDict)
         cookie,cookieDict = auth_login(baseurl,username=username,password=password)
     end
