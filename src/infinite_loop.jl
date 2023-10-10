@@ -33,7 +33,7 @@ catch e
     @warn("Failed to access InfluxDB. See above!")
 end
 
-nsecsleep = 60
+nsecsleep = 30*60
 while true 
     @time cookieDict = writestats(baseurl,influxdbbucketname,influxdbsettings,uptimekumaurl=uptimekumaurl)
     sleep(nsecsleep)
