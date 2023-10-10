@@ -1,9 +1,11 @@
 using qBittorrentStats
 using Test
+using Dates
+import InfluxDBClient
 
 @testset "qBittorrentStats.jl" begin
-    # Write your tests here.
 
     include("webuiapi.jl")
+
     include("local_tests_wrapper.jl")
 end

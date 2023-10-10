@@ -1,13 +1,3 @@
-using Pkg
-Pkg.activate(".")
-Pkg.instantiate()
-
-#using Revise; 
-using Dates
-using qBittorrentStats;import InfluxDBClient
-#import CurlHTTP;import HTTP;import JSON3;using DataFrames; ; 
-#baseurl = "http://qbittorrentdockervm.diro.ch" #apparrently TLS 1.3 causes issues...
-
 baseurl = "http://10.14.15.205:8080"
 influxdbbucketname = "qBittorrentStats"
 influxdbsettings = InfluxDBClient.get_settings()
