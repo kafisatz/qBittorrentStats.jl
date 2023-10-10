@@ -34,7 +34,8 @@ catch e
 end
 
 nsecsleep = 30*60
-while true 
+while true
+    @info(Dates.now())
     @time cookieDict = writestats(baseurl,influxdbbucketname,influxdbsettings,uptimekumaurl=uptimekumaurl)
     sleep(nsecsleep)
 end
