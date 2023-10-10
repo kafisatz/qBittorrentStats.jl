@@ -45,7 +45,7 @@ function storemagneturis(js,influxdbsettings,baseurl,influxdbbucketname)
     keepnames = ["name","hash","infohash_v2","magnet_uri","last_activity","size","total_size","tracker","trackers_count"]
     df = DataFrames.DataFrame(js)
     
-    select!(df,keepnames)
+    DataFrames.select!(df,keepnames)
     fixed_datetime = DateTime(Date(2020,1,1))
     df[!,:datetime] .= fixed_datetime
     tags = ["name","hash"]
@@ -55,7 +55,26 @@ function storemagneturis(js,influxdbsettings,baseurl,influxdbbucketname)
 end
 
 export deletetorrent
-function deletetorrent()
+function deletetorrent(h::String,baseurl::String;cookieDict=nothing,username="admin",password=nothing,deletefiles=true)
+    #=
+        username = "admin"
+        pw = ENV["QBITTORRENT_PASSWORD"]
+        password = pw
+        deletefiles = true
+    =#
+    if isnothing(cookieDict)
+        cookie,cookieDict = auth_login(baseurl,username=username,password=password)
+    end
+
+    urlwithhash = baseurl * "/api/v2/torrents/delete?hashes=" * h * "&deleteFiles=" * string(deletefiles)
+    urlwithhash = baseurl * "/api/v2/torrents/delete?hashes=" * h
+    r = HTTP.request("GET",urlwithhash,cookies=cookieDict);
+    js = JSON3.read(r.body);
+    return js
+
+    #baseurl,hash::String)
     @error("in the works")    
+    #/api/v2/torrents/delete?hashes=8c212779b4abde7c6bc608063a0d008b7e40ce32&deleteFiles=false
     return res 
 end
+
