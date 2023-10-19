@@ -82,6 +82,7 @@ elif [ "$need_build" == "true" ]; then
   #command with tag == qbittorrentstats to copy paste into terminal
   #docker build . --build-arg INFLUXDB_URL=$INFLUXDB_URL --build-arg INFLUXDB_ORG=$INFLUXDB_ORG --build-arg INFLUXDB_TOKEN=$INFLUXDB_TOKEN --build-arg QBITTORRENT_PASSWORD=$QBITTORRENT_PASSWORD -t qbittorrentstats
   #docker-compose up -d
+  docker container rm $tag || true
   #NOTE -t is 'Allocate a pseudo-tty' it has nothing to do with the tag
   docker run -d --restart unless-stopped -t --name $tag $tag #name sets the container name to run, tag references the image name, the last '$tag' is the image name to be run
 else
