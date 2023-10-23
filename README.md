@@ -40,7 +40,7 @@ influxdbsettings = InfluxDBClient.get_settings()
 influxdbbucketname = "qBittorrentStats"
 
 #there is a single function which gathers the data from qBittorrent and writes it to InfluxDB
-@time cookieDict = writestats(baseurl,influxdbbucketname,influxdbsettings)
+@time cookieDict,lastactivitydf = writestats(baseurl,influxdbbucketname,influxdbsettings)
 
 #the data is gathered via https://github.com/qbittorrent/qBittorrent/wiki/WebUI-API-(qBittorrent-4.1)#get-torrent-generic-properties
 #see the property list on that page

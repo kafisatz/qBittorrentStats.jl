@@ -13,5 +13,6 @@ include("webuiapi.jl")
 include("influx.jl")
 include("main.jl")
 include("query.jl")
+include("cleanup.jl")
 
 end

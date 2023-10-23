@@ -60,11 +60,24 @@ function main_internal(baseurl::String,influxdbbucketname::String,influxdbsettin
     end
 
     ##################################################################
+    #size and last actitivty
+    ##################################################################
+    #get size and last activity
+    lastactivitydf = DataFrames.DataFrame(name=map(x->x.name,js),hash=map(x->x.hash,js),size=map(x->x.size,js),last_activity=map(x->x.last_activity,js))
+    sort!(lastactivitydf,[:last_activity],rev=false)
+    lastactivitydf.sizegb = lastactivitydf.size ./ 1024 ./ 1024 ./ 1024
+    #cumulate size
+    lastactivitydf.sizegb_cumsum = cumsum(lastactivitydf.sizegb)
+    lastactivitydf
+    
+    ##################################################################
     #get properties for each torrent
     ##################################################################
     hlist = map(x->x.hash,js);
     jsproperties = properties(baseurl,cookieDict,hlist);
 
+
+    
     ##################################################################
     #Create DataFrame
     ##################################################################
@@ -103,6 +116,6 @@ function main_internal(baseurl::String,influxdbbucketname::String,influxdbsettin
         HTTP.get(uptimekumaurl)
     end
 
-    return cookieDict
+    return cookieDict,lastactivitydf
 end
 
