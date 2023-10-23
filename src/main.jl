@@ -6,7 +6,7 @@ function writestats(baseurl::String,influxdbbucketname::String,influxdbsettings:
         @show e
         return nothing
     end
-end
+end 
 
 export main_internal 
 function main_internal(baseurl::String,influxdbbucketname::String,influxdbsettings::Dict{String,String};cookieDict=nothing,username="admin",password=nothing,uptimekumaurl="",printtime=true)
