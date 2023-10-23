@@ -1,4 +1,7 @@
-#!/bin/bash
+#!/bin/bash -l
+
+#the above line should ensure that enviroment variables are picked up (/.bashrc or maybe /.profile)
+
 export DOCKER_SCAN_SUGGEST=false
 
 stop_timeout=10
