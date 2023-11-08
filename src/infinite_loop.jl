@@ -3,7 +3,7 @@ Pkg.activate(".")
 Pkg.instantiate()
 
 #using Revise; 
-using Dates
+using Dates; using DataFrames
 using qBittorrentStats;import InfluxDBClient
 #import CurlHTTP;import HTTP;import JSON3;using DataFrames; ; 
 #baseurl = "http://qbittorrentdockervm.diro.ch" #apparrently TLS 1.3 causes issues...
@@ -28,8 +28,8 @@ uptimekumaurl = "https://uptimekuma.diro.ch/api/push/NVYbzSfPBb?status=up&msg=OK
 try 
     bucket_names, json = InfluxDBClient.get_buckets(influxdbsettings);
     @show bucket_names
-catch e 
-    @show e 
+catch e
+    @show e
     @warn("Failed to access InfluxDB. See above!")
 end
 
