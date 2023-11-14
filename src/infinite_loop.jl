@@ -35,8 +35,12 @@ end
 
 nsecsleep = 30*60
 while true
-    @time cookieDict,lastactivitydf = writestats(baseurl,influxdbbucketname,influxdbsettings,uptimekumaurl=uptimekumaurl)
-    @time ndeleted = cleanup(baseurl,cookieDict,lastactivitydf,threshold_in_tb=20)
-    @info("$(ndeleted) torrents deleted.")
+    try
+        @time cookieDict,lastactivitydf = writestats(baseurl,influxdbbucketname,influxdbsettings,uptimekumaurl=uptimekumaurl)
+        @time ndeleted = cleanup(baseurl,cookieDict,lastactivitydf,threshold_in_tb=20)
+        @info("$(ndeleted) torrents deleted.")
+    catch er
+        @show er
+    end
     sleep(nsecsleep)
 end
