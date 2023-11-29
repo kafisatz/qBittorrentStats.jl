@@ -5,12 +5,12 @@ function cleanup(baseurl,cookieDict,lastactivitydf;deletefiles=true,threshold_in
         threshold_in_tb = 19.9
     =#
     if threshold_in_tb <= 0
-        return nothing 
+        return 0 
     end
 
     have_tb = maximum(lastactivitydf.sizegb_cumsum)/1024
     if have_tb < threshold_in_tb
-        return nothing
+        return 0
     end
 
     idx = lastactivitydf.sizegb_cumsum .> threshold_in_tb*1024
