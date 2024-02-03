@@ -38,7 +38,7 @@ while true
     try
         @time cookieDict,lastactivitydf = writestats(baseurl,influxdbbucketname,influxdbsettings,uptimekumaurl=uptimekumaurl)
         space_usage_tib = round(maximum(lastactivitydf.sizegb_cumsum)/1024, sigdigits = 6)
-        @time ndeleted = cleanup(baseurl,cookieDict,lastactivitydf,threshold_in_tb=20)
+        @time ndeleted = cleanup(baseurl,cookieDict,lastactivitydf,threshold_in_tb=40)
         if iszero(ndeleted)
             @info("No torrents were deleted. space_usage_tib = $(space_usage_tib) TiB")
         else
