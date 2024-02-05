@@ -33,16 +33,18 @@ catch e
     @warn("Failed to access InfluxDB. See above!")
 end
 
+THRESHOLD_IN_TB = 40
+
 nsecsleep = 30*60
 while true
     try
         @time cookieDict,lastactivitydf = writestats(baseurl,influxdbbucketname,influxdbsettings,uptimekumaurl=uptimekumaurl)
         space_usage_tib = round(maximum(lastactivitydf.sizegb_cumsum)/1024, sigdigits = 6)
-        @time ndeleted = cleanup(baseurl,cookieDict,lastactivitydf,threshold_in_tb=40)
+        @time ndeleted = cleanup(baseurl,cookieDict,lastactivitydf,threshold_in_tb=THRESHOLD_IN_TB)
         if iszero(ndeleted)
-            @info("No torrents were deleted. space_usage_tib = $(space_usage_tib) TiB")
+            @info("No torrents were deleted (THRESHOLD_IN_TB=$(THRESHOLD_IN_TB)). space_usage_tib = $(space_usage_tib) TiB")
         else
-            @info("$(ndeleted) torrents deleted. space_usage_tib = $(space_usage_tib) TiB")
+            @info("$(ndeleted) torrents deleted (THRESHOLD_IN_TB=$(THRESHOLD_IN_TB)). space_usage_tib = $(space_usage_tib) TiB")
         end
     catch er
         @show er
