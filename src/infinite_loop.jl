@@ -25,7 +25,7 @@ uptimekumaurl = "https://uptimekuma.diro.ch/api/push/NVYbzSfPBb?status=up&msg=OK
 @assert ENV["QBITTORRENT_PASSWORD"] != ""
 
 @info("Testing InfluxDB access")
-try 
+try
     bucket_names, json = InfluxDBClient.get_buckets(influxdbsettings);
     @show bucket_names
 catch e
