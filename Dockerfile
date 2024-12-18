@@ -1,7 +1,7 @@
 # syntax = docker/dockerfile:1.2
 #choose a base image
 #FROM julia:1.9.3
-FROM julia:1.10-alpine
+FROM julia:1.11-alpine
 
 # mark it with a label, so we can remove dangling images
 LABEL cicd="qbittorrentstats"
