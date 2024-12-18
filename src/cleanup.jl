@@ -1,7 +1,6 @@
 export cleanup
 function cleanup(baseurl,cookieDict,lastactivitydf;deletefiles=true,threshold_in_tb::Int=20::Int)
     #=
-        threshold_in_tb = 20
         threshold_in_tb = 19.9
     =#
     if threshold_in_tb <= 0
