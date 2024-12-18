@@ -33,7 +33,7 @@ catch e
     @warn("Failed to access InfluxDB. See above!")
 end
 
-THRESHOLD_IN_TB = 15
+THRESHOLD_IN_TB = 40
 
 nsecsleep = 30*60
 while true
