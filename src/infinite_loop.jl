@@ -38,7 +38,11 @@ THRESHOLD_IN_TB = 15 #we are currently using the SSD volume (space is limited!)
 nsecsleep = 10*60
 while true
     try
+        try
         @time cookieDict,lastactivitydf = writestats(baseurl,influxdbbucketname,influxdbsettings,uptimekumaurl=uptimekumaurl)
+        catch ef 
+            @shoe ef 
+        end 
         ntorrents = size(lastactivitydf,1)
         space_usage_tib = round(maximum(lastactivitydf.sizegb_cumsum)/1024, sigdigits = 6)
         @time ndeleted = cleanup(baseurl,cookieDict,lastactivitydf,threshold_in_tb=THRESHOLD_IN_TB)
