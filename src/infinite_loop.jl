@@ -35,7 +35,7 @@ end
 
 THRESHOLD_IN_TB = 15 #we are currently using the SSD volume (space is limited!)
 
-nsecsleep = 30*60
+nsecsleep = 10*60
 while true
     try
         @time cookieDict,lastactivitydf = writestats(baseurl,influxdbbucketname,influxdbsettings,uptimekumaurl=uptimekumaurl)
