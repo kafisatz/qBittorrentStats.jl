@@ -41,7 +41,7 @@ while true
         try
         @time cookieDict,lastactivitydf = writestats(baseurl,influxdbbucketname,influxdbsettings,uptimekumaurl=uptimekumaurl)
         catch ef 
-            @shoe ef 
+            @show ef 
         end 
         ntorrents = size(lastactivitydf,1)
         space_usage_tib = round(maximum(lastactivitydf.sizegb_cumsum)/1024, sigdigits = 6)
