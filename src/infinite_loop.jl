@@ -38,6 +38,7 @@ THRESHOLD_IN_TB = 15 #we are currently using the SSD volume (space is limited!)
 nsecsleep = 10*60
 while true
     try
+        #this may error if the retention policy is finite, need to find out why though....
         @time cookieDict,lastactivitydf = writestats(baseurl,influxdbbucketname,influxdbsettings,uptimekumaurl=uptimekumaurl)
         ntorrents = size(lastactivitydf,1)
         space_usage_tib = round(maximum(lastactivitydf.sizegb_cumsum)/1024, sigdigits = 6)
