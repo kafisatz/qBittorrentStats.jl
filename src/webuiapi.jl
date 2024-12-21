@@ -50,8 +50,13 @@ function storemagneturis(js,influxdbsettings,baseurl,influxdbbucketname)
     df[!,:datetime] .= fixed_datetime
     tags = ["name","hash"]
     fields = setdiff(names(df),vcat(["datetime"],tags))
-    rs,lp = InfluxDBClient.write_dataframe(settings=influxdbsettings,bucket=influxdbbucketname,measurement=meas,data=df,fields=fields,tags=tags,timestamp=:datetime);
-    return rs
+    try
+        rs,lp = InfluxDBClient.write_dataframe(settings=influxdbsettings,bucket=influxdbbucketname,measurement=meas,data=df,fields=fields,tags=tags,timestamp=:datetime);
+        return rs
+    catch ef 
+        @show ef 
+    end    
+    return nothing
 end
 
 export deletetorrent

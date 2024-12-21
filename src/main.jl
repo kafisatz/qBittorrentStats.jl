@@ -104,7 +104,11 @@ function main_internal(baseurl::String,influxdbbucketname::String,influxdbsettin
     ##################################################################
     #write data to bucket. NOTE: we are using UTC timestamps
     ##################################################################    
-    rs,lp = InfluxDBClient.write_dataframe(settings=influxdbsettings,bucket=influxdbbucketname,measurement=baseurl,data=df,fields=fields,tags=tags,timestamp=:datetime);
+    try
+        rs,lp = InfluxDBClient.write_dataframe(settings=influxdbsettings,bucket=influxdbbucketname,measurement=baseurl,data=df,fields=fields,tags=tags,timestamp=:datetime);
+    catch ef 
+        @show ef 
+    end
 
     if !in(rs,[200,204])
         @warn "Unexpected return value. Data may not have been written to InfluxDB" rs
