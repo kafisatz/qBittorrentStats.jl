@@ -104,6 +104,8 @@ function main_internal(baseurl::String,influxdbbucketname::String,influxdbsettin
     ##################################################################
     #write data to bucket. NOTE: we are using UTC timestamps
     ##################################################################    
+    local rs 
+    local lp 
     try
         rs,lp = InfluxDBClient.write_dataframe(settings=influxdbsettings,bucket=influxdbbucketname,measurement=baseurl,data=df,fields=fields,tags=tags,timestamp=:datetime);
     catch ef 
