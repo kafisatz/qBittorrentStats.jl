@@ -46,7 +46,8 @@ while true
         if iszero(ndeleted)
             @info("No torrents were deleted (THRESHOLD_IN_TB=$(THRESHOLD_IN_TB)). space_usage_tib = $(space_usage_tib) TiB - Number of torrents: $(ntorrents)")
         else
-            @info("$(ndeleted) torrents deleted (THRESHOLD_IN_TB=$(THRESHOLD_IN_TB)). space_usage_tib = $(space_usage_tib) TiB - Number of torrents: $(ntorrents)")
+            s = ndeleted > 1 ? "s" : ""
+            @info("$(ndeleted) torrent$(s) deleted (THRESHOLD_IN_TB=$(THRESHOLD_IN_TB)). space_usage_tib = $(space_usage_tib) TiB - Number of torrents: $(ntorrents)")
         end
     catch er
         @show er
