@@ -33,7 +33,7 @@ catch e
     @warn("Failed to access InfluxDB. See above!")
 end
 
-THRESHOLD_IN_TB = 18.5 #we are currently using the SSD volume (space is limited!)
+THRESHOLD_IN_TB = 30.5 #we are currently using the SSD volume (space is limited!)
 
 nsecsleep = 10*60
 while true
