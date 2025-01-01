@@ -14,5 +14,6 @@ include("influx.jl")
 include("main.jl")
 include("query.jl")
 include("cleanup.jl")
+include("disk_space.jl")
 
 end
