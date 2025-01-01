@@ -21,7 +21,7 @@ function __init__()
     py"""import shutil
     import os
 
-    def DOES_NOT_WORK_pydiskspace(pt):
+    def pydiskspace(pt):
         print(pt)
         return shutil.disk_usage(pt)
 
