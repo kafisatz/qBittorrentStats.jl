@@ -1,21 +1,29 @@
 export cleanup
-function cleanup(baseurl,cookieDict,lastactivitydf;deletefiles=true,free_threshold_in_tb=20.0)
+function cleanup(baseurl,cookieDict,lastactivitydf;deletefiles=true,threshold_in_tb=20.0)
     #=
-        free_threshold_in_tb = 19.9
+        threshold_in_tb = 19.9
     =#
-    if free_threshold_in_tb <= 0
+    if threshold_in_tb <= 0
         return 0 
     end
 
-    have_tb = maximum(lastactivitydf.sizegb_cumsum)/1024
-    if have_tb < free_threshold_in_tb
+    have_tb = sum(select(unique(lastactivitydf,:name),Not(:sizegb_cumsum)).sizegb)/1024
+    #sum(lastactivitydf.sizegb) #overstates true space usage
+    if have_tb < threshold_in_tb
         return 0
     end
 
-    idx = lastactivitydf.sizegb_cumsum .> free_threshold_in_tb*1024
-    hashes_to_delete = lastactivitydf.hash[idx]
-    reverse!(hashes_to_delete)
-    names_to_delete = lastactivitydf.name[idx]
+    lastactivitydf_mod = deepcopy(lastactivitydf)
+    select!(lastactivitydf_mod,Not(:sizegb_cumsum))
+    unique!(lastactivitydf_mod,:name)
+    lastactivitydf_mod.sizegb_cumsum = cumsum(lastactivitydf_mod.sizegb)
+
+    idx = lastactivitydf_mod.sizegb_cumsum .> threshold_in_tb*1024
+    names_to_delete = lastactivitydf_mod.name[idx]
+
+    lastactivitydf_del = filter(x->in(x.name,names_to_delete),lastactivitydf)
+    #unique(lastactivitydf_del,:name)
+    hashes_to_delete = lastactivitydf_del.hash
     
     ndeleted = 0
     for h in hashes_to_delete
