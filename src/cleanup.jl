@@ -1,18 +1,18 @@
 export cleanup
-function cleanup(baseurl,cookieDict,lastactivitydf;deletefiles=true,threshold_in_tb=20.0)
+function cleanup(baseurl,cookieDict,lastactivitydf;deletefiles=true,free_threshold_in_tb=20.0)
     #=
-        threshold_in_tb = 19.9
+        free_threshold_in_tb = 19.9
     =#
-    if threshold_in_tb <= 0
+    if free_threshold_in_tb <= 0
         return 0 
     end
 
     have_tb = maximum(lastactivitydf.sizegb_cumsum)/1024
-    if have_tb < threshold_in_tb
+    if have_tb < free_threshold_in_tb
         return 0
     end
 
-    idx = lastactivitydf.sizegb_cumsum .> threshold_in_tb*1024
+    idx = lastactivitydf.sizegb_cumsum .> free_threshold_in_tb*1024
     hashes_to_delete = lastactivitydf.hash[idx]
     reverse!(hashes_to_delete)
     names_to_delete = lastactivitydf.name[idx]

@@ -17,5 +17,6 @@ freediskspace(raw"\\ds\data\media")
 
 freediskspace("/tmp")
 
-freediskspace("/volume2/data_ssd")
+free_space_in_gb = freediskspace("/volume2/data_ssd")
+free_space_in_tb = free_space_in_gb/1024
 =#

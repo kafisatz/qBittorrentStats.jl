@@ -33,7 +33,8 @@ catch e
     @warn("Failed to access InfluxDB. See above!")
 end
 
-THRESHOLD_IN_TB = 30.5 #we are currently using the SSD volume (space is limited!)
+#FREE_THRESHOLD_IN_TB = 30.5 #we are currently using the SSD volume (space is limited!)
+FREE_THRESHOLD_IN_TB = 5.5 #we are currently using the SSD volume (space is limited!)
 
 nsecsleep = 10*60
 while true
@@ -42,12 +43,16 @@ while true
         @time cookieDict,lastactivitydf = writestats(baseurl,influxdbbucketname,influxdbsettings,uptimekumaurl=uptimekumaurl)
         ntorrents = size(lastactivitydf,1)
         space_usage_tib = round(maximum(lastactivitydf.sizegb_cumsum)/1024, sigdigits = 6)
-        @time ndeleted = cleanup(baseurl,cookieDict,lastactivitydf,threshold_in_tb=THRESHOLD_IN_TB)
+
+        free_space_in_gb = freediskspace("/volume2/data_ssd")
+        free_space_in_tb = free_space_in_gb/1024
+        
+        @time ndeleted = cleanup(baseurl,cookieDict,lastactivitydf,free_threshold_in_tb=FREE_THRESHOLD_IN_TB)
         if iszero(ndeleted)
-            @info("No torrents were deleted (THRESHOLD_IN_TB=$(THRESHOLD_IN_TB)). space_usage_tib = $(space_usage_tib) TiB - Number of torrents: $(ntorrents)")
+            @info("No torrents were deleted (FREE_THRESHOLD_IN_TB=$(FREE_THRESHOLD_IN_TB)). space_usage_tib = $(space_usage_tib) TiB - Number of torrents: $(ntorrents)")
         else
             s = ndeleted > 1 ? "s" : ""
-            @info("$(ndeleted) torrent$(s) deleted (THRESHOLD_IN_TB=$(THRESHOLD_IN_TB)). space_usage_tib = $(space_usage_tib) TiB - Number of torrents: $(ntorrents)")
+            @info("$(ndeleted) torrent$(s) deleted (FREE_THRESHOLD_IN_TB=$(FREE_THRESHOLD_IN_TB)). space_usage_tib = $(space_usage_tib) TiB - Number of torrents: $(ntorrents)")
         end
     catch er
         @show er
