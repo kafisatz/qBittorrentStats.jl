@@ -1,11 +1,11 @@
 #using PyCall
 
-export disk_usage
-function disk_usage(pt)
+export diskspace
+function diskspace(pt)
+
     @assert isdir(pt)
+    v=py"pydiskspace"(pt)
 
-    @pyimport shutil
-
-    v = shutil.disk_usage(pt)
-return v 
+    #v[1]/1024/1024/1024
+    return v./(2^30)
 end

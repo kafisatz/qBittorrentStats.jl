@@ -10,8 +10,10 @@ Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
 HTTP = "cd3eb016-35fb-5094-929b-558a96fad6f3"
 InfluxDBClient = "7a087161-7d97-4627-bbdd-0c82161d9408"
 JSON3 = "0f8b85d8-7281-11e9-16c2-39a750bddbf1"
+PyCall = "438e738f-606a-5dbb-bf0a-cddfbfd45ab0"
 
 [compat]
+PyCall = "1.96.4"
 julia = "1.9"
 
 [extras]
