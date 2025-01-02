@@ -7,7 +7,7 @@ FROM julia:1.11-alpine
 LABEL cicd="qbittorrentstats"
 
 # Julia install dependencies and Python development
-RUN apt-get update && apt-get install -yq --no-install-recommends \
+RUN apt get update && apt get install -yq --no-install-recommends \
     wget \
     ca-certificates \
     python3 \
