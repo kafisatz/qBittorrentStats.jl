@@ -8,4 +8,5 @@ import InfluxDBClient
     include("webuiapi.jl")
 
     include("local_tests_wrapper.jl")
+    include("python.jl")
 end
