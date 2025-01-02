@@ -3,7 +3,7 @@ module qBittorrentStats
 import CurlHTTP
 import HTTP
 import JSON3
-import DataFrames
+using DataFrames
 import InfluxDBClient
 using PyCall
 using Dates
