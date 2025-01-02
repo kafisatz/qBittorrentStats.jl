@@ -6,6 +6,17 @@ FROM julia:1.11-alpine
 # mark it with a label, so we can remove dangling images
 LABEL cicd="qbittorrentstats"
 
+# Julia install dependencies and Python development
+RUN apt-get update && apt-get install -yq --no-install-recommends \
+    wget \
+    ca-certificates \
+    python3 \
+    python3-dev \
+    python3-pip
+
+# Install PyJulia requirement PyCall
+RUN julia -e 'import Pkg; Pkg.update()' && julia -e 'import Pkg; Pkg.add("PyCall")'
+
 #https://vsupalov.com/buildkit-cache-mount-dockerfile/
 ENV PIP_CACHE_DIR=/var/cache/buildkit/pip
 RUN mkdir -p $PIP_CACHE_DIR
