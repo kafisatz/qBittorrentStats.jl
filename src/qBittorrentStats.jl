@@ -6,6 +6,7 @@ import JSON3
 using DataFrames
 import InfluxDBClient
 using PyCall
+import StatsBase
 using Dates
 
 # Write your package code here.
@@ -16,6 +17,7 @@ include("main.jl")
 include("query.jl")
 include("cleanup.jl")
 include("disk_space.jl")
+include("filesystem.jl")
 
 function __init__()
     py"""import shutil

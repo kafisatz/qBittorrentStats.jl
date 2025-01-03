@@ -58,3 +58,9 @@ while true
     end
     sleep(nsecsleep)
 end
+
+#=
+    dir=raw"\\ds\data_ssd\downloads_torrent_clients\dockervm"    
+    @time cookieDict,lastactivitydf = writestats(baseurl,influxdbbucketname,influxdbsettings,uptimekumaurl=uptimekumaurl)
+    delete_torrents_without_data(dir,lastactivitydf)
+=#

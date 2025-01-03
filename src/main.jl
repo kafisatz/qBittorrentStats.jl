@@ -63,7 +63,7 @@ function main_internal(baseurl::String,influxdbbucketname::String,influxdbsettin
     #size and last actitivty
     ##################################################################
     #get size and last activity
-    lastactivitydf = DataFrames.DataFrame(name=map(x->x.name,js),hash=map(x->x.hash,js),size=map(x->x.size,js),last_activity=map(x->x.last_activity,js))
+    lastactivitydf = DataFrames.DataFrame(name=map(x->x.name,js),hash=map(x->x.hash,js),size=map(x->x.size,js),last_activity=map(x->x.last_activity,js),tracker=map(x->x.tracker,js))
     sort!(lastactivitydf,[:last_activity],rev=true)
     lastactivitydf.last_activity_dt = Dates.unix2datetime.(lastactivitydf.last_activity)
     lastactivitydf.sizegb = lastactivitydf.size ./ 1024 ./ 1024 ./ 1024
