@@ -47,8 +47,8 @@ while true
         #sum(lastactivitydf.sizegb)/1024 #overstates true space usage
         
         @time ndeleted = cleanup(baseurl,cookieDict,lastactivitydf,threshold_in_tb=THRESHOLD_IN_TIB)
-        space_left_tib = round(THRESHOLD_IN_TIB .- space_usage_tib,digits=2)
-        msg = "THRESHOLD_IN_TIB = $(THRESHOLD_IN_TIB) TiB - space_usage_tib = $(space_usage_tib) TiB - space_left_tib = $(space_left_tib) TiB -  Number of torrents: $(ntorrents)"
+        space_left_tib_until_torrent_pruning_starts = round(THRESHOLD_IN_TIB .- space_usage_tib,digits=2)
+        msg = "THRESHOLD_IN_TIB = $(THRESHOLD_IN_TIB) TiB - space_usage_tib = $(space_usage_tib) TiB - space_left_tib_until_torrent_pruning_starts = $(space_left_tib_until_torrent_pruning_starts) TiB -  Number of torrents: $(ntorrents)"
         if iszero(ndeleted)
             @info("No torrents were deleted. "*msg)
         else
