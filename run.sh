@@ -96,6 +96,14 @@ fi
 echo_title "Cleaning up --filter "label=cicd=$tag""
 docker image prune --force --filter "label=cicd=$tag"
 
+echo_title "Cleaning up docker system (docker image prune -a -f)"
+docker image prune -a -f
+echo_title "Cleaning up docker system (docker container prune -f)"
+docker container prune -f 
+echo_title "Cleaning up docker system (docker system prune -f)"
+docker system prune -f
+
+
 if [ $(has_option "--full_cleanup" "-fcu") == "true" ] ; then
   echo_title "FULL CLEAN-UP"
   docker image prune --force
