@@ -33,7 +33,7 @@ catch e
     @warn("Failed to access InfluxDB. See above!")
 end
 
-THRESHOLD_IN_TB = 30.5 #we are currently using the SSD volume (space is limited!)
+THRESHOLD_IN_TIB = 30.5 #we are currently using the SSD volume (space is limited!)
 
 nsecsleep = 10*60
 while true
@@ -43,15 +43,17 @@ while true
         ntorrents = size(lastactivitydf,1)
         
         #cross seeds only need space 'once' per torrent name!
-        space_usage_tib = round(sum(select(unique(lastactivitydf,:name),Not(:sizegb_cumsum)).sizegb)/1024, sigdigits = 6)
+        space_usage_tib = round(sum(select(unique(lastactivitydf,:name),Not(:sizegb_cumsum)).sizegb)/1024, digits = 2)
         #sum(lastactivitydf.sizegb)/1024 #overstates true space usage
         
-        @time ndeleted = cleanup(baseurl,cookieDict,lastactivitydf,threshold_in_tb=THRESHOLD_IN_TB)
+        @time ndeleted = cleanup(baseurl,cookieDict,lastactivitydf,threshold_in_tb=THRESHOLD_IN_TIB)
+        space_left_tib = round(THRESHOLD_IN_TIB .- space_usage_tib,digits=2)
+        msg = "THRESHOLD_IN_TIB = $(THRESHOLD_IN_TIB) TiB - space_usage_tib = $(space_usage_tib) TiB - space_left_tib = $(space_left_tib) TiB -  Number of torrents: $(ntorrents)"
         if iszero(ndeleted)
-            @info("No torrents were deleted (THRESHOLD_IN_TB=$(THRESHOLD_IN_TB)). space_usage_tib = $(space_usage_tib) TiB - Number of torrents: $(ntorrents)")
+            @info("No torrents were deleted. "*msg)
         else
             s = ndeleted > 1 ? "s" : ""
-            @info("$(ndeleted) torrent$(s) deleted (THRESHOLD_IN_TB=$(THRESHOLD_IN_TB)). space_usage_tib = $(space_usage_tib) TiB - Number of torrents: $(ntorrents)")
+            @info("$(ndeleted) torrent$(s) deleted.       " * msg)
         end
     catch er
         @show er
