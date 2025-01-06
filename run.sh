@@ -69,7 +69,9 @@ echo_title status=$status
     docker rm $containerid
     sleep 1
   fi
-  docker stop $tag || true && docker rm $tag || true
+  docker ps -q --filter "name=$tag" | grep -q . && docker stop $tag && docker rm -fv $tag
+  #alternative command that produces a warning/'error', but works just fine
+  #docker stop $tag || true && docker rm $tag || true
   need_start=true
 #elif [ -z "$status" ] ; then
 #  need_start=true
@@ -79,17 +81,15 @@ echo_title need_start=$need_start
 if [ "$need_start" == "false" ] ; then
   printf "\nNo changes found. Container is already running.\n"
 elif [ "$need_build" == "true" ]; then
-  echo_title "BUILDING & STARTING CONTAINER"  
+  echo_title "BUILDING CONTAINER"  
+  #export tag=qbittorrentstats
   #docker build . -t $tag #NO ARGUMENTS
   docker build . --build-arg INFLUXDB_URL=$INFLUXDB_URL --build-arg INFLUXDB_ORG=$INFLUXDB_ORG --build-arg INFLUXDB_TOKEN=$INFLUXDB_TOKEN --build-arg QBITTORRENT_PASSWORD=$QBITTORRENT_PASSWORD -t $tag
-  #command with tag == qbittorrentstats to copy paste into terminal
-  #docker build . --build-arg INFLUXDB_URL=$INFLUXDB_URL --build-arg INFLUXDB_ORG=$INFLUXDB_ORG --build-arg INFLUXDB_TOKEN=$INFLUXDB_TOKEN --build-arg QBITTORRENT_PASSWORD=$QBITTORRENT_PASSWORD -t qbittorrentstats
-  #docker-compose up -d
-  docker container rm $tag || true
-  #NOTE -t is 'Allocate a pseudo-tty' it has nothing to do with the tag
-  docker run -d --restart unless-stopped -t --name $tag $tag #name sets the container name to run, tag references the image name, the last '$tag' is the image name to be run
-else
+fi
+
+if [ "$need_start" == "true" ] ; then
   echo_title "STARTING CONTAINER"
+  docker ps -a -q --filter "name=$tag" | grep -q . && docker rm -fv $tag
   docker run -d --restart unless-stopped -t --name $tag $tag #name sets the container name to run, tag references the image name, the last '$tag' is the image name to be run
 fi
 
