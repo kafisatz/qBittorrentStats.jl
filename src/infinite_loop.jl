@@ -3,7 +3,7 @@ Pkg.activate(".")
 Pkg.instantiate()
 
 #using Revise
-using Dates; using DataFrames
+using Dates; using DataFrames; using StatsBase
 using qBittorrentStats;import InfluxDBClient
 #import CurlHTTP;import HTTP;import JSON3;using DataFrames;
 #baseurl = "http://qbittorrentdockervm.diro.ch" #apparrently TLS 1.3 causes issues...
@@ -35,6 +35,11 @@ end
 
 THRESHOLD_IN_TIB = 30.5 #we are currently using the SSD volume (space is limited!)
 
+hours_when_data_cleanup_has_run = []
+
+data_dirs = ["/volume2/data_ssd/downloads_torrent_clients/dockervm",raw"\\ds\data_ssd\downloads_torrent_clients\dockervm"]
+filter!(isdir,data_dirs)
+
 nsecsleep = 10*60
 while true
     try
@@ -48,6 +53,17 @@ while true
         
         ndeleted = cleanup(baseurl,cookieDict,lastactivitydf,threshold_in_tb=THRESHOLD_IN_TIB)
         space_left_tib_until_torrent_pruning_starts = round(THRESHOLD_IN_TIB .- space_usage_tib,digits=2)
+
+        #################################################################################
+        #clean up data (torrents without data are deleted & folders/files without torrent are also deleted)
+        
+        if size(data_dirs,1) > 0 
+            dir = data_dirs[1]
+            if isdir(dir)
+                delete_torrents_without_data_and_data_without_torrents(dir,lastactivitydf)
+            end
+        end
+        #################################################################################
 
         ts2 = timestring()
         ts3 = "Europe/Zurich now = $(ts2)"
@@ -66,7 +82,7 @@ while true
 end
 
 #=
-    dir=raw"\\ds\data_ssd\downloads_torrent_clients\dockervm"    
+    dir=raw"\\ds\data_ssd\downloads_torrent_clients\dockervm"
     @time cookieDict,lastactivitydf = writestats(baseurl,influxdbbucketname,influxdbsettings,uptimekumaurl=uptimekumaurl)
-    delete_torrents_without_data(dir,lastactivitydf)
+    delete_torrents_without_data_and_data_without_torrents(dir,lastactivitydf)
 =#

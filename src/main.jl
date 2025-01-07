@@ -63,9 +63,11 @@ function main_internal(baseurl::String,influxdbbucketname::String,influxdbsettin
     #size and last actitivty
     ##################################################################
     #get size and last activity
-    lastactivitydf = DataFrames.DataFrame(name=map(x->x.name,js),hash=map(x->x.hash,js),size=map(x->x.size,js),last_activity=map(x->x.last_activity,js),tracker=map(x->x.tracker,js))
+    lastactivitydf = DataFrames.DataFrame(name=map(x->x.name,js),hash=map(x->x.hash,js),size=map(x->x.size,js),last_activity=map(x->x.last_activity,js),tracker=map(x->x.tracker,js),added_on=map(x->x.added_on,js))
     sort!(lastactivitydf,[:last_activity],rev=true)
     lastactivitydf.last_activity_dt = Dates.unix2datetime.(lastactivitydf.last_activity)
+    lastactivitydf.added_on_dt = Dates.unix2datetime.(lastactivitydf.added_on)    
+    
     lastactivitydf.sizegb = lastactivitydf.size ./ 1024 ./ 1024 ./ 1024
     #cumulate size
     lastactivitydf.sizegb_cumsum = cumsum(lastactivitydf.sizegb)
@@ -124,18 +126,16 @@ function main_internal(baseurl::String,influxdbbucketname::String,influxdbsettin
     return cookieDict,lastactivitydf
 end
 
-
-
 export timestring 
 function timestring()
-ts = string(round(Dates.now(Dates.TimeZone("Europe/Zurich")),Dates.Second))
-loc = findfirst("+",ts)
-if !isnothing(loc)
-    ts2 = ts[1:loc[1]-1]
-else 
-    ts2 = ts 
-end
-#@info("Europe/Zurich now = $(ts2)")
-return ts2  
+    ts = string(round(Dates.now(Dates.TimeZone("Europe/Zurich")),Dates.Second))
+    loc = findfirst("+",ts)
+    if !isnothing(loc)
+        ts2 = ts[1:loc[1]-1]
+    else 
+        ts2 = ts 
+    end
+    #@info("Europe/Zurich now = $(ts2)")
+    return ts2  
 end
 
