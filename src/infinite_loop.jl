@@ -48,9 +48,13 @@ while true
         
         @time ndeleted = cleanup(baseurl,cookieDict,lastactivitydf,threshold_in_tb=THRESHOLD_IN_TIB)
         space_left_tib_until_torrent_pruning_starts = round(THRESHOLD_IN_TIB .- space_usage_tib,digits=2)
-        msg = "THRESHOLD_IN_TIB = $(THRESHOLD_IN_TIB) TiB - space_usage_tib = $(space_usage_tib) TiB - space_left_tib_until_torrent_pruning_starts = $(space_left_tib_until_torrent_pruning_starts) TiB -  Number of torrents: $(ntorrents)"
+
+        ts2 = timestring()
+        ts3 = "Europe/Zurich now = $(ts2)"
+
+        msg = "THRESHOLD_IN_TIB = $(THRESHOLD_IN_TIB) TiB - space_usage_tib = $(space_usage_tib) TiB - space_left_tib_until_torrent_pruning_starts = $(space_left_tib_until_torrent_pruning_starts) TiB - Number of torrents: $(ntorrents) - " * ts3
         if iszero(ndeleted)
-            @info("No torrents were deleted. "*msg)
+            @info("No torrents were deleted. " * msg)
         else
             s = ndeleted > 1 ? "s" : ""
             @info("$(ndeleted) torrent$(s) deleted.       " * msg)
