@@ -7,9 +7,8 @@ function read_files(dir)
     return rs,rs2
 end
 
-
 export delete_torrents_without_data_and_data_without_torrents
-function delete_torrents_without_data_and_data_without_torrents(dir,lastactivitydf;ntorrents_to_delete_threshold=10,data_to_delete_without_torrent_threshold_tib=1.0)
+function delete_torrents_without_data_and_data_without_torrents(dir,lastactivitydf,cookieDict;ntorrents_to_delete_threshold=10,data_to_delete_without_torrent_threshold_tib=1.0)
     #ntorrents_to_delete_threshold=10;data_to_delete_without_torrent_threshold_tib=1.0
     rs,rs2 = read_files(dir)
 
