@@ -33,7 +33,7 @@ catch e
     @warn("Failed to access InfluxDB. See above!")
 end
 
-THRESHOLD_IN_TIB = 30.5 #we are currently using the SSD volume (space is limited!)
+THRESHOLD_IN_TIB = 29.5 #we are currently using the SSD volume (space is limited!)
 
 hours_when_data_cleanup_has_run = []
 
