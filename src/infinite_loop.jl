@@ -54,7 +54,7 @@ while true
 
         msg = "THRESHOLD_IN_TIB = $(THRESHOLD_IN_TIB) TiB - space_usage_tib = $(space_usage_tib) TiB - space_left_tib_until_torrent_pruning_starts = $(space_left_tib_until_torrent_pruning_starts) TiB - Number of torrents: $(ntorrents) - " * ts3
         if iszero(ndeleted)
-            @info("No torrents were deleted. " * msg)
+            @info("Nothing was deleted. " * msg)
         else
             s = ndeleted > 1 ? "s" : ""
             @info("$(ndeleted) torrent$(s) deleted.       " * msg)
