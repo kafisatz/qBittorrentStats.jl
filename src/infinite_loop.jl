@@ -39,14 +39,14 @@ nsecsleep = 10*60
 while true
     try
         #this may error if the retention policy is finite, need to find out why though....
-        @time cookieDict,lastactivitydf = writestats(baseurl,influxdbbucketname,influxdbsettings,uptimekumaurl=uptimekumaurl)
+        cookieDict,lastactivitydf = writestats(baseurl,influxdbbucketname,influxdbsettings,uptimekumaurl=uptimekumaurl)
         ntorrents = size(lastactivitydf,1)
         
         #cross seeds only need space 'once' per torrent name!
         space_usage_tib = round(sum(select(unique(lastactivitydf,:name),Not(:sizegb_cumsum)).sizegb)/1024, digits = 2)
         #sum(lastactivitydf.sizegb)/1024 #overstates true space usage
         
-        @time ndeleted = cleanup(baseurl,cookieDict,lastactivitydf,threshold_in_tb=THRESHOLD_IN_TIB)
+        ndeleted = cleanup(baseurl,cookieDict,lastactivitydf,threshold_in_tb=THRESHOLD_IN_TIB)
         space_left_tib_until_torrent_pruning_starts = round(THRESHOLD_IN_TIB .- space_usage_tib,digits=2)
 
         ts2 = timestring()
