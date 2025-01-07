@@ -107,3 +107,28 @@ function delete_data_wo_torrent(data_but_no_torrent_with_path)
     end
     return nothing 
 end
+
+
+export daily_volume
+function daily_volume(lastactivitydf)
+    df = deepcopy(lastactivitydf)
+    df.added_on_date = Date.(df.added_on_dt)
+    gb = groupby(df,:added_on_date)
+    smry = combine(gb,:sizegb => sum => :sizegb,:name=> length => :torrent_count)
+    smry[!,:sizetb] .= smry.sizegb ./ 1024
+
+    sort!(smry,:added_on_date,rev=true)
+    #cut off today and oldest day
+    if size(smry,1) > 3
+        smry2 = smry[2:end-1,:]
+        nn = min(7,size(smry2,1))
+        smry3 = smry[1:nn,:]
+        tb_mean_over_last_x_days = round(StatsBase.mean(smry3.sizetb),digits=2)
+        ntorrents_mean_over_last_x_days = trunc(Int,StatsBase.mean(smry3.torrent_count))
+        return tb_mean_over_last_x_days,ntorrents_mean_over_last_x_days,nn
+    end
+    
+return 0.0,0
+
+#tb_mean_over_last_x_days,ntorrents_mean_over_last_x_days = daily_volume(lastactivitydf)
+end

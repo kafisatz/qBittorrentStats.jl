@@ -1,5 +1,5 @@
-export cleanup
-function cleanup(baseurl,cookieDict,lastactivitydf;deletefiles=true,threshold_in_tb=20.0)
+export delete_torrents_if_data_threshold_is_exceeded
+function delete_torrents_if_data_threshold_is_exceeded(baseurl,cookieDict,lastactivitydf;deletefiles=true,threshold_in_tb=20.0)
     #=
         threshold_in_tb = 19.9
     =#
