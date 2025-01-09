@@ -54,4 +54,8 @@ end
     dir=raw"\\ds\data_ssd\downloads_torrent_clients\dockervm"
     @time cookieDict,lastactivitydf = writestats(baseurl,influxdbbucketname,influxdbsettings,uptimekumaurl=uptimekumaurl)
     delete_torrents_without_data_and_data_without_torrents(dir,lastactivitydf)
+
+    cookieDict,lastactivitydf = writestats("https://qbittorrentmam.diro.ch",influxdbbucketname,influxdbsettings,uptimekumaurl=uptimekumaurl)
+    sum(lastactivitydf.sizegb)/1024
+    sum(lastactivitydf.sizegb)
 =#
