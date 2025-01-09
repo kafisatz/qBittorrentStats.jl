@@ -6,7 +6,7 @@ using Dates; using DataFrames; using StatsBase; using qBittorrentStats;import In
 
 baseurl,influxdbbucketname,influxdbsettings,uptimekumaurl,data_dirs = init_global_vars()
 
-THRESHOLD_IN_TIB = 29.5 #we are currently using the SSD volume (space is limited!)
+THRESHOLD_IN_TIB = 35.0 #we are currently using the SSD volume (space is limited!)
 nsecsleep = 10*60
 while true
     try
