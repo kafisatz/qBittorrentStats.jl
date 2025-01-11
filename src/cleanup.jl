@@ -20,6 +20,7 @@ function delete_torrents_if_data_threshold_is_exceeded(baseurl,cookieDict,lastac
 
     idx = lastactivitydf_mod.sizegb_cumsum .> threshold_in_tb*1024
     names_to_delete = lastactivitydf_mod.name[idx]
+    @show names_to_delete
 
     lastactivitydf_del = filter(x->in(x.name,names_to_delete),lastactivitydf)
     #unique(lastactivitydf_del,:name)
