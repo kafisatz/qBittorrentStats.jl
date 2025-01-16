@@ -79,11 +79,14 @@ function deletetorrent(h::String,baseurl::String;cookieDict=nothing,username="ad
     
     #using CurlHTTP for now:
     curl = CurlHTTP.CurlEasy(url=url,method=CurlHTTP.POST,verbose=verbose) 
+    CurlHTTP.curl_easy_setopt(curl, CurlHTTP.CURLOPT_HTTP_VERSION, CurlHTTP.CURL_HTTP_VERSION_1_1)
+    
     requestBody = "hashes=$(h)&deleteFiles=$(deletefiles)"
     @assert length(cookieDict) == 1
     headers = ["Cookie: $(first(keys(cookieDict)))=$(first(values(cookieDict)))"]
     #requestBody = "{\"hashes\":\"$h\",\"deleteFiles\":$deletefiles}"
     #println(requestBody)
+    
     res, http_status, errormessage = CurlHTTP.curl_execute(curl, requestBody, headers)
     @assert 200 == http_status "status was not 200 (deletetorrent)"
     return res 
