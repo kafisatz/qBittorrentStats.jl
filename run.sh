@@ -77,6 +77,9 @@ echo_title status=$status
 #  need_start=true
 #fi
 
+cfgfolder="/volume1/data/configs"
+echo_title cfgfolder=$cfgfolder
+
 echo_title need_start=$need_start
 if [ "$need_start" == "false" ] ; then
   printf "\nNo changes found. Container is already running.\n"
@@ -90,7 +93,7 @@ fi
 if [ "$need_start" == "true" ] ; then
   echo_title "STARTING CONTAINER"
   docker ps -a -q --filter "name=$tag" | grep -q . && docker rm -fv $tag
-  docker run -d --restart unless-stopped -t --name $tag $tag #name sets the container name to run, tag references the image name, the last '$tag' is the image name to be run
+  docker run -d --restart unless-stopped -v $cfgfolder:/cfgfolder:ro -t --name $tag $tag #name sets the container name to run, tag references the image name, the last '$tag' is the image name to be run
 fi
 
 echo_title "Cleaning up --filter "label=cicd=$tag""
