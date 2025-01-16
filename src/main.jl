@@ -74,7 +74,13 @@ function getstats(baseurl::String;cookieDict=nothing,username="admin",password=n
     end
 
     if isnothing(cookieDict)
-        cookie,cookieDict = auth_login(baseurl,username=username,password=password)
+        try 
+            cookie,cookieDict = auth_login(baseurl,username=username,password=password)
+        catch e 
+            @warn("this should not happen!")
+            @show e
+            cookie,cookieDict = auth_login(baseurl,username=username,password=password,verbose=true)
+        end
     end
 
     ##################################################################

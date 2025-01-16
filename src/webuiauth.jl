@@ -1,6 +1,6 @@
 
 export auth_login
-function auth_login(baseurl;username="admin",password=nothing)
+function auth_login(baseurl;username="admin",password=nothing,verbose=false)
     #=
         username="admin"
         pw = ENV["QBITTORRENT_PASSWORD"]
@@ -18,7 +18,7 @@ function auth_login(baseurl;username="admin",password=nothing)
     url = string(baseurl,"/api/v2/auth/login")
 
     #curl = CurlHTTP.CurlEasy(url=url,method=CurlHTTP.POST,verbose=true)
-    curl = CurlHTTP.CurlEasy(url=url,method=CurlHTTP.POST,verbose=true)
+    curl = CurlHTTP.CurlEasy(url=url,method=CurlHTTP.POST,verbose=verbose)
     requestBody = "username=$(username)&password=$(pw)"
     headers = ["Referer: $(baseurl)"]
     res, http_status, errormessage = CurlHTTP.curl_execute(curl, requestBody, headers)

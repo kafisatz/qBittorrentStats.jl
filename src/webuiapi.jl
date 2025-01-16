@@ -60,7 +60,7 @@ function storemagneturis(js,influxdbsettings,baseurl,influxdbbucketname)
 end
 
 export deletetorrent
-function deletetorrent(h::String,baseurl::String;cookieDict=nothing,username="admin",password=nothing,deletefiles=true)
+function deletetorrent(h::String,baseurl::String;cookieDict=nothing,username="admin",password=nothing,deletefiles=true,verbose=false)
     #=
         username = "admin"
         pw = ENV["QBITTORRENT_PASSWORD"]
@@ -78,7 +78,7 @@ function deletetorrent(h::String,baseurl::String;cookieDict=nothing,username="ad
     #r = HTTP.request("POST",url,[],bdy,cookies=cookieDict)
     
     #using CurlHTTP for now:
-    curl = CurlHTTP.CurlEasy(url=url,method=CurlHTTP.POST,verbose=false)
+    curl = CurlHTTP.CurlEasy(url=url,method=CurlHTTP.POST,verbose=verbose) 
     requestBody = "hashes=$(h)&deleteFiles=$(deletefiles)"
     @assert length(cookieDict) == 1
     headers = ["Cookie: $(first(keys(cookieDict)))=$(first(values(cookieDict)))"]
