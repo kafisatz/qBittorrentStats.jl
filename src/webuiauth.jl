@@ -17,7 +17,6 @@ function auth_login(baseurl;username="admin",password=nothing,verbose=false)
 
     @assert !endswith(baseurl,"/") "baseurl must not end with a slash /"
     url = string(baseurl,"/api/v2/auth/login")
-
         
     #curl = CurlHTTP.CurlEasy(url=url,method=CurlHTTP.POST,verbose=true)
     curl = CurlHTTP.CurlEasy(url=url,method=CurlHTTP.POST,verbose=verbose)
