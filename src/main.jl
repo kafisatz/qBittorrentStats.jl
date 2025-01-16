@@ -124,6 +124,11 @@ function getstats(baseurl::String;cookieDict=nothing,username="admin",password=n
     lastactivitydf.sizegb_cumsum = cumsum(lastactivitydf.sizegb)
     lastactivitydf
     
+     #set uptimkuma status 
+    if uptimekumaurl != ""
+        HTTP.get(uptimekumaurl)
+    end
+
     return lastactivitydf,js,cookieDict
 end
 
@@ -183,11 +188,7 @@ function writestats(baseurl,lastactivitydf,js,influxdbbucketname::String,influxd
         @warn "Unexpected return value. Data may not have been written to InfluxDB" rs
     end
 
-    #set uptimkuma status 
-    if uptimekumaurl != ""
-        HTTP.get(uptimekumaurl)
-    end
-
+   
     return nothing
 end
 
