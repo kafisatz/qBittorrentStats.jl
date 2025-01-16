@@ -93,7 +93,7 @@ fi
 if [ "$need_start" == "true" ] ; then
   echo_title "STARTING CONTAINER"
   docker ps -a -q --filter "name=$tag" | grep -q . && docker rm -fv $tag
-  docker run -d --restart unless-stopped -v /volume1/data:/volume1/data:rw -v $cfgfolder:/cfgfolder:ro -t --name $tag $tag #name sets the container name to run, tag references the image name, the last '$tag' is the image name to be run
+  docker run -d --restart unless-stopped -v /volume1/data:/volume1/data:rw -v /volume2/data_ssd:/volume2/data_ssd:rw -v $cfgfolder:/cfgfolder:ro -t --name $tag $tag #name sets the container name to run, tag references the image name, the last '$tag' is the image name to be run
 fi
 
 echo_title "Cleaning up --filter "label=cicd=$tag""
