@@ -20,7 +20,7 @@ function auth_login(baseurl;username="admin",password=nothing,verbose=false)
         
     #curl = CurlHTTP.CurlEasy(url=url,method=CurlHTTP.POST,verbose=true)
     curl = CurlHTTP.CurlEasy(url=url,method=CurlHTTP.POST,verbose=verbose)
-    CurlHTTP.curl_easy_setopt(curl, CurlHTTP.CURLOPT_HTTP_VERSION, CurlHTTP.CURL_HTTP_VERSION_1_1)
+    CurlHTTP.curl_easy_setopt(curl, CurlHTTP.CURLOPT_HTTP_VERSION, CurlHTTP.CURL_HTTP_VERSION_1_1) 
     #CurlHTTP.curl_easy_setopt(curl, CurlHTTP.CURLOPT_HTTP_VERSION, CurlHTTP.CURL_HTTP_VERSION_1_0)
     #CurlHTTP.curl_easy_setopt(curl, CurlHTTP.CURLOPT_HTTP_VERSION, CurlHTTP.CURL_HTTP_VERSION_2_0)
     
