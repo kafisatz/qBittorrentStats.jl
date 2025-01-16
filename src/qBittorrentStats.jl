@@ -18,6 +18,7 @@ include("query.jl")
 include("cleanup.jl")
 include("disk_space.jl")
 include("filesystem.jl")
+include("config.jl")
 
 function __init__()
     py"""import shutil

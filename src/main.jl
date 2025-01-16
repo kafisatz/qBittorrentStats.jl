@@ -1,15 +1,62 @@
-export writestats 
-function writestats(baseurl::String,influxdbbucketname::String,influxdbsettings::Dict{String,String};cookieDict=nothing,username="admin",password=nothing,uptimekumaurl="")
-    try 
-        return main_internal(baseurl,influxdbbucketname,influxdbsettings,cookieDict=cookieDict,username=username,password=password,uptimekumaurl=uptimekumaurl)
-    catch e
-        @show e
-        return nothing
-    end
-end 
 
-export main_internal 
-function main_internal(baseurl::String,influxdbbucketname::String,influxdbsettings::Dict{String,String};cookieDict=nothing,username="admin",password=nothing,uptimekumaurl="",printtime=false)
+export monitor_instance
+function monitor_instance(cfg)
+
+    baseurl = cfg.url
+    uptimekumaurl = cfg.uptimekumaurl
+    THRESHOLD_IN_TIB = cfg.THRESHOLD_IN_TIB
+    data_dirs = cfg.data_dirs
+
+    #get data from qbittorrent
+    lastactivitydf,js,cookieDict = getstats(baseurl,uptimekumaurl=uptimekumaurl);
+
+    #currently disabled
+    if false
+        #this may error if the retention policy is finite, need to find out why though....  
+        writestats(baseurl,lastactivitydf,js,influxdbbucketname,influxdbsettings,cookieDict=cookieDict,uptimekumaurl=uptimekumaurl)
+    end
+
+    tb_mean_over_last_n_days,ntorrents_mean_over_last_n_days,n_days = daily_volume(lastactivitydf)
+    @show tb_mean_over_last_n_days,ntorrents_mean_over_last_n_days,n_days
+    ntorrents = size(lastactivitydf,1)
+
+    #cross seeds only need space 'once' per torrent name!
+    space_usage_tib = round(sum(select(unique(lastactivitydf,:name),Not(:sizegb_cumsum)).sizegb)/1024, digits = 2)
+    #sum(lastactivitydf.sizegb)/1024 #overstates true space usage
+
+    if cfg.delete_torrents_if_data_threshold_is_exceeded
+        ndeleted = delete_torrents_if_data_threshold_is_exceeded(baseurl,cookieDict,lastactivitydf,threshold_in_tb=THRESHOLD_IN_TIB)
+        space_left_tib_until_torrent_pruning_starts = round(THRESHOLD_IN_TIB .- space_usage_tib,digits=2)
+    else 
+        ndeleted = 0
+        space_left_tib_until_torrent_pruning_starts = 9999.9
+    end
+
+    if cfg.delete_torrents_without_data_and_data_without_torrents
+    #################################################################################
+    #clean up data (torrents without data are deleted & folders/files without torrent are also deleted)
+        if (size(data_dirs,1) > 0)
+            dir = filter(isdirtry,data_dirs)[1]
+            if isdir(dir)
+                delete_torrents_without_data_and_data_without_torrents_fn(baseurl,dir,lastactivitydf,cookieDict)
+               #delete_torrents_without_data_and_data_without_torrents_fn(baseurl,dir,lastactivitydf,cookieDict;ntorrents_to_delete_threshold=10,data_to_delete_without_torrent_threshold_tib=1.0)
+            end
+        end
+    end
+
+    ts2 = timestring()
+    ts3 = "Europe/Zurich now = $(ts2)"
+    println("#"^200)
+    println(baseurl * " - " * ts3 * " - Number of torrents: $(ntorrents)")
+
+    msg = "Nb. of deleted Torrents = $(ndeleted) - space used = $(space_usage_tib) TiB - space left until pruning = $(space_left_tib_until_torrent_pruning_starts) TiB - threshold = $(THRESHOLD_IN_TIB) TiB"
+    println(msg)
+
+return nothing 
+end
+
+export getstats
+function getstats(baseurl::String;cookieDict=nothing,username="admin",password=nothing,uptimekumaurl="",printtime=false)
     #=
         username = "admin"
         pw = ENV["QBITTORRENT_PASSWORD"]
@@ -51,9 +98,7 @@ function main_internal(baseurl::String,influxdbbucketname::String,influxdbsettin
     #get list of torrents
     ##################################################################
     js = gettorrents(baseurl,cookieDict);
-    #storing magnet URIs, this writes to a different measurement "$(baseurl)_magnetURIs"
-    storemagneturis(js,influxdbsettings,baseurl,influxdbbucketname)
-
+    
     #if there are no torrents, we are done
     if iszero(length(js))
         return cookieDict
@@ -73,6 +118,20 @@ function main_internal(baseurl::String,influxdbbucketname::String,influxdbsettin
     lastactivitydf.sizegb_cumsum = cumsum(lastactivitydf.sizegb)
     lastactivitydf
     
+    return lastactivitydf,js,cookieDict
+end
+
+export writestats 
+function writestats(baseurl,lastactivitydf,js,influxdbbucketname::String,influxdbsettings::Dict{String,String};cookieDict=nothing,username="admin",password=nothing,uptimekumaurl="",printtime=false)
+    #=
+        username = "admin"
+        pw = ENV["QBITTORRENT_PASSWORD"]
+        password = pw
+    =#
+
+    #storing magnet URIs, this writes to a different measurement "$(baseurl)_magnetURIs"
+    storemagneturis(js,influxdbsettings,baseurl,influxdbbucketname)
+
     ##################################################################
     #get properties for each torrent
     ##################################################################
@@ -123,7 +182,7 @@ function main_internal(baseurl::String,influxdbbucketname::String,influxdbsettin
         HTTP.get(uptimekumaurl)
     end
 
-    return cookieDict,lastactivitydf
+    return nothing
 end
 
 export timestring 
@@ -137,45 +196,4 @@ function timestring()
     end
     #@info("Europe/Zurich now = $(ts2)")
     return ts2  
-end
-
-
-
-export init_global_vars 
-function init_global_vars() 
-    baseurl = "http://10.14.15.205:8080"
-    influxdbbucketname = "qBittorrentStats"
-    influxdbsettings = InfluxDBClient.get_settings()
-    uptimekumaurl = "https://uptimekuma.diro.ch/api/push/NVYbzSfPBb?status=up&msg=OK&ping=2" #optional
-
-    #the script will not run without these
-    @assert haskey(ENV,"INFLUXDB_URL")
-    @assert haskey(ENV,"INFLUXDB_ORG")
-    @assert haskey(ENV,"INFLUXDB_TOKEN")
-    @assert haskey(ENV,"QBITTORRENT_PASSWORD")
-
-    @assert ENV["INFLUXDB_URL"] != ""
-    @assert ENV["INFLUXDB_ORG"] != ""
-    @assert ENV["INFLUXDB_TOKEN"] != ""
-    @assert ENV["QBITTORRENT_PASSWORD"] != ""
-
-    @info("Testing InfluxDB access")
-    try
-        bucket_names, json = InfluxDBClient.get_buckets(influxdbsettings);
-        @show bucket_names
-    catch e
-        @show e
-        @warn("Failed to access InfluxDB. See above!")
-    end
-
-
-
-    hours_when_data_cleanup_has_run = []
-
-    data_dirs = ["/volume2/data_ssd/downloads_torrent_clients/dockervm",raw"\\ds\data_ssd\downloads_torrent_clients\dockervm"]
-    filter!(isdir,data_dirs)
-
-    return baseurl,influxdbbucketname,influxdbsettings,uptimekumaurl,data_dirs
-    
-    return nothing 
 end

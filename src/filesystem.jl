@@ -7,8 +7,9 @@ function read_files(dir)
     return rs,rs2
 end
 
-export delete_torrents_without_data_and_data_without_torrents
-function delete_torrents_without_data_and_data_without_torrents(dir,lastactivitydf,cookieDict;ntorrents_to_delete_threshold=10,data_to_delete_without_torrent_threshold_tib=1.0)
+export delete_torrents_without_data_and_data_without_torrents_fn
+function delete_torrents_without_data_and_data_without_torrents_fn(baseurl,dir,lastactivitydf,cookieDict;ntorrents_to_delete_threshold=10,data_to_delete_without_torrent_threshold_tib=1.0)
+    
     #ntorrents_to_delete_threshold=10;data_to_delete_without_torrent_threshold_tib=1.0
     rs,rs2 = read_files(dir)
 
@@ -108,7 +109,6 @@ function delete_data_wo_torrent(data_but_no_torrent_with_path)
     return nothing 
 end
 
-
 export daily_volume
 function daily_volume(lastactivitydf)
     df = deepcopy(lastactivitydf)
@@ -123,12 +123,40 @@ function daily_volume(lastactivitydf)
         smry2 = smry[2:end-1,:]
         nn = min(7,size(smry2,1))
         smry3 = smry[1:nn,:]
-        tb_mean_over_last_x_days = round(StatsBase.mean(smry3.sizetb),digits=2)
-        ntorrents_mean_over_last_x_days = trunc(Int,StatsBase.mean(smry3.torrent_count))
-        return tb_mean_over_last_x_days,ntorrents_mean_over_last_x_days,nn
+        tb_mean_over_last_n_days = round(StatsBase.mean(smry3.sizetb),digits=2)
+        ntorrents_mean_over_last_n_days = trunc(Int,StatsBase.mean(smry3.torrent_count))
+        return tb_mean_over_last_n_days,ntorrents_mean_over_last_n_days,nn
     end
     
 return 0.0,0
 
-#tb_mean_over_last_x_days,ntorrents_mean_over_last_x_days = daily_volume(lastactivitydf)
+#tb_mean_over_last_n_days,ntorrents_mean_over_last_n_days = daily_volume(lastactivitydf)
+end
+
+export isfiletry
+function isfiletry(x)
+    #windows may get EACCESS issues or timeouts sometimes 
+    try 
+        if isfile(x)
+            return true 
+        end
+        return false
+    catch e
+        return false
+    end
+    return false
+end
+
+export isdirtry
+function isdirtry(x)
+    #windows may get EACCESS issues or timeouts sometimes 
+    try 
+        if isdir(x)
+            return true 
+        end
+        return false
+    catch e
+        return false
+    end
+    return false
 end
