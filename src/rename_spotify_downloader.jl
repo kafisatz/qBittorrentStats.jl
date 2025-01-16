@@ -1,5 +1,5 @@
 dr = raw"C:\Users\BernhardKönig\Downloads\kasperli"
-@assert isdir(dr)
+@assert isdirtry(dr)
 
 fis = readdir(dr, join=true)
 f=fis[1]

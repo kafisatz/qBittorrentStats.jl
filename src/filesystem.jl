@@ -8,7 +8,7 @@ function read_files(dir)
 end
 
 export delete_torrents_without_data_and_data_without_torrents_fn
-function delete_torrents_without_data_and_data_without_torrents_fn(baseurl,dir,lastactivitydf,cookieDict;ntorrents_to_delete_threshold=10,data_to_delete_without_torrent_threshold_tib=1.0)
+function delete_torrents_without_data_and_data_without_torrents_fn(baseurl,dir,lastactivitydf,cookieDict;password=password,ntorrents_to_delete_threshold=10,data_to_delete_without_torrent_threshold_tib=1.0)
     
     #ntorrents_to_delete_threshold=10;data_to_delete_without_torrent_threshold_tib=1.0
     rs,rs2 = read_files(dir)
@@ -33,7 +33,7 @@ function delete_torrents_without_data_and_data_without_torrents_fn(baseurl,dir,l
     ####################################################################################################
 
     data_but_no_torrent_with_path = joinpath.(dir,data_but_no_torrent)
-    @assert all(x->isdir(x) || isfile(x),data_but_no_torrent_with_path)
+    @assert all(x->isdirtry(x) || isfile(x),data_but_no_torrent_with_path)
 
     data_but_no_torrent_size_tib = get_size(data_but_no_torrent_with_path)
 
@@ -67,7 +67,7 @@ function delete_torrents_without_data_and_data_without_torrents_fn(baseurl,dir,l
             ndeleted = 0
             for h in hashes_to_delete
                 @info("Deleting torrent without data on disk $h")
-                rs = deletetorrent(h,baseurl,cookieDict=cookieDict)
+                rs = deletetorrent(h,baseurl,cookieDict=cookieDict,password=password)
                 ndeleted +=1
             end    
         end
@@ -83,7 +83,7 @@ function get_size(data_but_no_torrent_with_path)
     for path in data_but_no_torrent_with_path
         if isfile(path)
             total_size_bytes += filesize(path)
-        elseif isdir(path)
+        elseif isdirtry(path)
             for (root, dirs, files) in walkdir(path)
                 for file in files
                     total_size_bytes += filesize(joinpath(root, file))
@@ -100,7 +100,7 @@ end
 export delete_data_wo_torrent
 function delete_data_wo_torrent(data_but_no_torrent_with_path)
     for fi_or_fldr in data_but_no_torrent_with_path
-        if isdir(fi_or_fldr)
+        if isdirtry(fi_or_fldr)
             rm(fi_or_fldr, recursive=true)
         else 
             rm(fi_or_fldr)

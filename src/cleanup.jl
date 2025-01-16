@@ -1,5 +1,5 @@
 export delete_torrents_if_data_threshold_is_exceeded
-function delete_torrents_if_data_threshold_is_exceeded(baseurl,cookieDict,lastactivitydf;deletefiles=true,threshold_in_tb=20.0)
+function delete_torrents_if_data_threshold_is_exceeded(baseurl,cookieDict,lastactivitydf;deletefiles=true,threshold_in_tb=20.0;password=nothing)
     #=
         threshold_in_tb = 19.9
     =#
@@ -29,7 +29,7 @@ function delete_torrents_if_data_threshold_is_exceeded(baseurl,cookieDict,lastac
     ndeleted = 0
     for h in hashes_to_delete
         #@info("Deleting torrent with hash $h")
-        rs = deletetorrent(h,baseurl,cookieDict=cookieDict)
+        rs = deletetorrent(h,baseurl,cookieDict=cookieDict,password=password)
         ndeleted +=1
     end
 

@@ -24,14 +24,16 @@ catch e
 end
 
 @info("Testing writestats...")
+
+lastactivitydf,js,cookieDict = getstats(baseurl,uptimekumaurl=uptimekumaurl);
 #nsecsleep = 30*60
 #while true
-    @time cookieDict,lastactivitydf = writestats(baseurl,influxdbbucketname,influxdbsettings,uptimekumaurl=uptimekumaurl)
+    @time cookieDict,lastactivitydf = writestats(baseurl,influxdbbucketname,influxdbsettings)
     @test true
     sleep(0.5)
-    @time cookieDict,lastactivitydf = writestats(baseurl,influxdbbucketname,influxdbsettings,uptimekumaurl=uptimekumaurl)
+    @time cookieDict,lastactivitydf = writestats(baseurl,influxdbbucketname,influxdbsettings)
     @test true
     sleep(0.5)
-    @time cookieDict,lastactivitydf = writestats(baseurl,influxdbbucketname,influxdbsettings,uptimekumaurl=uptimekumaurl)
+    @time cookieDict,lastactivitydf = writestats(baseurl,influxdbbucketname,influxdbsettings)
     @test true
 #end

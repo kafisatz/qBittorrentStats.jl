@@ -3,7 +3,7 @@ Pkg.activate("."); Pkg.instantiate()
 using Dates; using DataFrames; using StatsBase; using qBittorrentStats;import InfluxDBClient; import JSON3; import CurlHTTP
 
 function main_fn()
-    configfiles = [raw"\\ds\data\configs\qbittorrentstats\config.json","/volume1/data/configs/qbittorrentstats/config.json","/cfgfolder/qbittorrentstats/config.json"]
+    configfiles = [raw"\\10.14.15.10\data\configs\qbittorrentstats\config.json",raw"\\ds\data\configs\qbittorrentstats\config.json","/volume1/data/configs/qbittorrentstats/config.json","/cfgfolder/qbittorrentstats/config.json"]
     @assert any(isfiletry.(configfiles))
 
     cfgs,configfile,configfilehash,influxdbsettings = get_config(configfiles)

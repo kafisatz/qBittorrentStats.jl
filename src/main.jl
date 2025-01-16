@@ -1,19 +1,26 @@
 
 export monitor_instance
 function monitor_instance(cfg)
-
+    #cfg = cfgs[2]
     baseurl = cfg.url
     uptimekumaurl = cfg.uptimekumaurl
     THRESHOLD_IN_TIB = cfg.THRESHOLD_IN_TIB
     data_dirs = cfg.data_dirs
+    
+    password = nothing
+    if haskey(cfg,"password") 
+        if cfg.password != ""
+            password = cfg.password
+        end
+    end
 
     #get data from qbittorrent
-    lastactivitydf,js,cookieDict = getstats(baseurl,uptimekumaurl=uptimekumaurl);
+    lastactivitydf,js,cookieDict = getstats(baseurl,uptimekumaurl=uptimekumaurl,password=password);
 
     #currently disabled
     if false
         #this may error if the retention policy is finite, need to find out why though....  
-        writestats(baseurl,lastactivitydf,js,influxdbbucketname,influxdbsettings,cookieDict=cookieDict,uptimekumaurl=uptimekumaurl)
+        writestats(baseurl,lastactivitydf,js,influxdbbucketname,influxdbsettings,cookieDict=cookieDict,password=password)
     end
 
     tb_mean_over_last_n_days,ntorrents_mean_over_last_n_days,n_days = daily_volume(lastactivitydf)
@@ -25,7 +32,7 @@ function monitor_instance(cfg)
     #sum(lastactivitydf.sizegb)/1024 #overstates true space usage
 
     if cfg.delete_torrents_if_data_threshold_is_exceeded
-        ndeleted = delete_torrents_if_data_threshold_is_exceeded(baseurl,cookieDict,lastactivitydf,threshold_in_tb=THRESHOLD_IN_TIB)
+        ndeleted = delete_torrents_if_data_threshold_is_exceeded(baseurl,cookieDict,lastactivitydf,threshold_in_tb=THRESHOLD_IN_TIB,password=password)
         space_left_tib_until_torrent_pruning_starts = round(THRESHOLD_IN_TIB .- space_usage_tib,digits=2)
     else 
         ndeleted = 0
@@ -37,8 +44,8 @@ function monitor_instance(cfg)
     #clean up data (torrents without data are deleted & folders/files without torrent are also deleted)
         if (size(data_dirs,1) > 0)
             dir = filter(isdirtry,data_dirs)[1]
-            if isdir(dir)
-                delete_torrents_without_data_and_data_without_torrents_fn(baseurl,dir,lastactivitydf,cookieDict)
+            if isdirtry(dir)
+                delete_torrents_without_data_and_data_without_torrents_fn(baseurl,dir,lastactivitydf,cookieDict,password=password)
                #delete_torrents_without_data_and_data_without_torrents_fn(baseurl,dir,lastactivitydf,cookieDict;ntorrents_to_delete_threshold=10,data_to_delete_without_torrent_threshold_tib=1.0)
             end
         end
@@ -133,7 +140,7 @@ function getstats(baseurl::String;cookieDict=nothing,username="admin",password=n
 end
 
 export writestats 
-function writestats(baseurl,lastactivitydf,js,influxdbbucketname::String,influxdbsettings::Dict{String,String};cookieDict=nothing,username="admin",password=nothing,uptimekumaurl="",printtime=false)
+function writestats(baseurl,lastactivitydf,js,influxdbbucketname::String,influxdbsettings::Dict{String,String};cookieDict=nothing,username="admin",password=nothing,printtime=false)
     #=
         username = "admin"
         pw = ENV["QBITTORRENT_PASSWORD"]

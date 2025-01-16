@@ -7,12 +7,11 @@ function get_config(configfiles::Vector)
     cfgs = JSON3.read(configfile)
     #cfgs[2]
 
-    for i=1:size(cfgs,1)
+    for i in eachindex(cfgs)
         if cfgs[i].delete_torrents_without_data_and_data_without_torrents
             #data_dirs = ["/volume2/data_ssd/downloads_torrent_clients/dockervm",raw"\\ds\data_ssd\downloads_torrent_clients\dockervm"]
             data_dirs = cfgs[i].data_dirs
-            isdir.(data_dirs)
-            @assert any(isdir,data_dirs)
+            @assert any(isdirtry,data_dirs)
         end
 
         if cfgs[i].delete_torrents_if_data_threshold_is_exceeded

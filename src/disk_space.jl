@@ -3,7 +3,7 @@
 export freediskspace
 function freediskspace(pt)
 
-    @assert isdir(pt)
+    @assert isdirtry(pt)
     v = py"get_fs_freespace"(pt)
 
     #v2=py"pydiskspace"(pt)
