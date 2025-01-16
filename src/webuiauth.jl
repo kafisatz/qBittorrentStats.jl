@@ -18,7 +18,7 @@ function auth_login(baseurl;username="admin",password=nothing)
     url = string(baseurl,"/api/v2/auth/login")
 
     #curl = CurlHTTP.CurlEasy(url=url,method=CurlHTTP.POST,verbose=true)
-    curl = CurlHTTP.CurlEasy(url=url,method=CurlHTTP.POST,verbose=false)
+    curl = CurlHTTP.CurlEasy(url=url,method=CurlHTTP.POST,verbose=true)
     requestBody = "username=$(username)&password=$(pw)"
     headers = ["Referer: $(baseurl)"]
     res, http_status, errormessage = CurlHTTP.curl_execute(curl, requestBody, headers)
