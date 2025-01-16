@@ -49,6 +49,7 @@ ENV QBITTORRENT_PASSWORD $QBITTORRENT_PASSWORD
 ########################################################################
 RUN julia --project=@. -e "import Pkg;Pkg.test()"
 
+RUN julia --project="/usr/local/qBittorrentStats.jl" -e "import Pkg; Pkg.instantiate()"
 ########################################################################
 #run application 
 ########################################################################
