@@ -9,7 +9,6 @@ LABEL cicd="qbittorrentstats"
 # Julia install dependencies and Python development
 #RUN apt get update && apt get install -yq --no-install-recommends wget     ca-certificates     python3     python3-dev     python3-pip
 
-# Install PyJulia requirement PyCall
 RUN julia -e 'import Pkg; Pkg.update()' && julia -e 'import Pkg; Pkg.add("PyCall")'
 
 #https://vsupalov.com/buildkit-cache-mount-dockerfile/
