@@ -2,7 +2,6 @@ using Pkg;
 Pkg.activate("."); Pkg.instantiate()
 using Dates; using DataFrames; using StatsBase; using qBittorrentStats;import InfluxDBClient; import JSON3
 
-
 function main_fn()
     configfiles = [raw"\\ds\data\configs\qbittorrentstats\config.json","/volume1/data/configs/qbittorrentstats/config.json","/cfgfolder/qbittorrentstats/config.json"]
     @assert any(isfiletry.(configfiles))
@@ -14,7 +13,7 @@ function main_fn()
     nsecsleep = 10*60
     while true
 
-        for i=1:size(cfgs,1)
+        for i in eachindex(cfgs)
             try
                 cfg = cfgs[i]
                 monitor_instance(cfg)
