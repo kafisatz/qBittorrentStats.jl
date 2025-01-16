@@ -1,6 +1,12 @@
 
 export monitor_instance
 function monitor_instance(cfg)
+    println("#"^200)
+    ts2 = timestring()
+    ts3 = "Europe/Zurich now = $(ts2)"
+    println(baseurl * " - " * ts3 * " - Number of torrents: $(ntorrents)")
+
+
     #cfg = cfgs[2]
     baseurl = cfg.url
     uptimekumaurl = cfg.uptimekumaurl
@@ -50,11 +56,6 @@ function monitor_instance(cfg)
             end
         end
     end
-
-    ts2 = timestring()
-    ts3 = "Europe/Zurich now = $(ts2)"
-    println("#"^200)
-    println(baseurl * " - " * ts3 * " - Number of torrents: $(ntorrents)")
 
     msg = "Nb. of deleted Torrents = $(ndeleted) - space used = $(space_usage_tib) TiB - space left until pruning = $(space_left_tib_until_torrent_pruning_starts) TiB - threshold = $(THRESHOLD_IN_TIB) TiB"
     println(msg)
