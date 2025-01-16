@@ -85,7 +85,7 @@ function deletetorrent(h::String,baseurl::String;cookieDict=nothing,username="ad
     #requestBody = "{\"hashes\":\"$h\",\"deleteFiles\":$deletefiles}"
     #println(requestBody)
     res, http_status, errormessage = CurlHTTP.curl_execute(curl, requestBody, headers)
-    @assert http_status == 200
+    @assert 200 == http_status "status was not 200 (deletetorrent)"
     return res 
 end
 

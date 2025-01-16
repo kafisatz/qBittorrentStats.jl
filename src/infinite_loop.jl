@@ -1,6 +1,6 @@
 using Pkg; 
 Pkg.activate("."); Pkg.instantiate()
-using Dates; using DataFrames; using StatsBase; using qBittorrentStats;import InfluxDBClient; import JSON3
+using Dates; using DataFrames; using StatsBase; using qBittorrentStats;import InfluxDBClient; import JSON3; import CurlHTTP
 
 function main_fn()
     configfiles = [raw"\\ds\data\configs\qbittorrentstats\config.json","/volume1/data/configs/qbittorrentstats/config.json","/cfgfolder/qbittorrentstats/config.json"]
