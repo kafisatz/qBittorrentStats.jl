@@ -7,7 +7,7 @@ configfiles = [raw"\\ds\data\configs\qbittorrentstats\config.json","/volume1/dat
 cfgs,configfile,configfilehash,influxdbsettings = get_config(configfiles)
 #cfgs,configfile,configfilehash,influxdbsettings = rescan_config(cfgs,configfile,configfilehash,influxdbsettings)
 #i=2
-
+ 
 nsecsleep = 10*60
 while true
 
