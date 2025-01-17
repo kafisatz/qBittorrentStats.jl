@@ -9,5 +9,6 @@ import InfluxDBClient
 
     include("local_tests_wrapper.jl")
     include("python.jl")
-    include("main.jl")
+
+    include("main_smoketests.jl")    
 end
