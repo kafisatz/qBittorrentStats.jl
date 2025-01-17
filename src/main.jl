@@ -50,8 +50,13 @@ function monitor_instance(cfg)
         if (size(data_dirs,1) > 0)
             dir = filter(isdirtry,data_dirs)[1]
             if isdirtry(dir)
+                if ndeleted != 0 
+                    #MUST re fetch lastactivitydf (this is a MUST, as we just deleted torrents on disk and in the qbittorrent application)
+                    lastactivitydf,js,cookieDict = getstats(baseurl,uptimekumaurl=uptimekumaurl,password=password);
+                end
+
                 delete_torrents_without_data_and_data_without_torrents_fn(baseurl,dir,lastactivitydf,cookieDict,password=password)
-               #delete_torrents_without_data_and_data_without_torrents_fn(baseurl,dir,lastactivitydf,cookieDict;ntorrents_to_delete_threshold=10,data_to_delete_without_torrent_threshold_tib=1.0)
+            #delete_torrents_without_data_and_data_without_torrents_fn(baseurl,dir,lastactivitydf,cookieDict;ntorrents_to_delete_threshold=10,data_to_delete_without_torrent_threshold_tib=1.0)
             end
         end
     end
