@@ -1,17 +1,16 @@
 
 export monitor_instance
 function monitor_instance(cfg)
-    println("#"^200)
-    ts2 = timestring()
-    ts3 = "Europe/Zurich now = $(ts2)"
-    println(baseurl * " - " * ts3 * " - Number of torrents: $(ntorrents)")
-
-
     #cfg = cfgs[2]
     baseurl = cfg.url
     uptimekumaurl = cfg.uptimekumaurl
     THRESHOLD_IN_TIB = cfg.THRESHOLD_IN_TIB
     data_dirs = cfg.data_dirs
+    
+    #print information
+    println("#"^200)
+    ts2 = timestring()
+    ts3 = "Europe/Zurich now = $(ts2)"
     
     password = nothing
     if haskey(cfg,"password") 
@@ -57,6 +56,7 @@ function monitor_instance(cfg)
         end
     end
 
+    println(baseurl * " - " * ts3 * " - Number of torrents: $(ntorrents)")
     msg = "Nb. of deleted Torrents = $(ndeleted) - space used = $(space_usage_tib) TiB - space left until pruning = $(space_left_tib_until_torrent_pruning_starts) TiB - threshold = $(THRESHOLD_IN_TIB) TiB"
     println(msg)
 

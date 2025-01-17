@@ -9,10 +9,15 @@ function main_fn()
     cfgs,configfile,configfilehash,influxdbsettings = get_config(configfiles)
     #cfgs,configfile,configfilehash,influxdbsettings = rescan_config(cfgs,configfile,configfilehash,influxdbsettings)
     #i=2
-    
+    #run one without try catch 
+    for i in eachindex(cfgs)
+        cfg = cfgs[i]
+        monitor_instance(cfg)
+        cfgs,configfile,configfilehash,influxdbsettings = rescan_config(cfgs,configfile,configfilehash,influxdbsettings);
+    end
+
     nsecsleep = 10*60
     while true
-
         for i in eachindex(cfgs)
             try
                 cfg = cfgs[i]
@@ -22,7 +27,6 @@ function main_fn()
                 @show er
             end
         end
-        
         sleep(nsecsleep)
     end
 
