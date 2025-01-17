@@ -29,7 +29,7 @@ function monitor_instance(cfg)
     end
 
     tb_mean_over_last_n_days,ntorrents_mean_over_last_n_days,n_days = daily_volume(lastactivitydf)
-    @show tb_mean_over_last_n_days,ntorrents_mean_over_last_n_days,n_days
+    
     ntorrents = size(lastactivitydf,1)
 
     #cross seeds only need space 'once' per torrent name!
@@ -62,6 +62,7 @@ function monitor_instance(cfg)
     end
 
     println(baseurl * " - " * ts3 * " - Number of torrents: $(ntorrents)")
+    @show tb_mean_over_last_n_days,ntorrents_mean_over_last_n_days,n_days
     msg = "Nb. of deleted Torrents = $(ndeleted) - space used = $(space_usage_tib) TiB - space left until pruning = $(space_left_tib_until_torrent_pruning_starts) TiB - threshold = $(THRESHOLD_IN_TIB) TiB"
     println(msg)
 
