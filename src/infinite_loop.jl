@@ -9,7 +9,7 @@ function main_fn()
     cfgs,configfile,configfilehash,influxdbsettings = get_config(configfiles)
     #cfgs,configfile,configfilehash,influxdbsettings = rescan_config(cfgs,configfile,configfilehash,influxdbsettings)
     #i=2
-    #run one without try catch 
+    #run one without try catch (smoke tests)
     for i in eachindex(cfgs)
         cfg = cfgs[i]
         monitor_instance(cfg)
