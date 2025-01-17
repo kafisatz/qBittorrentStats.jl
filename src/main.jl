@@ -250,5 +250,8 @@ function smoketests(cfgs,configfile,configfilehash,influxdbsettings)
     println("SMOKE TESTS finished")
     println("#"^200)
     println("#"^200)
+    println("")
+    println("")
+    println("")
     return true 
 end
