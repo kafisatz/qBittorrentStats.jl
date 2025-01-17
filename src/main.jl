@@ -218,3 +218,23 @@ function timestring()
     #@info("Europe/Zurich now = $(ts2)")
     return ts2  
 end
+
+
+export smoketests
+function smoketests(cfgs,configfile,configfilehash,influxdbsettings) 
+
+    #run one without try catch (smoke tests)
+    println("#"^200)
+    println("#"^200)
+    println("SMOKE TESTS")
+    for i in eachindex(cfgs)
+        cfg = cfgs[i]
+        monitor_instance(cfg)
+        cfgs,configfile,configfilehash,influxdbsettings = rescan_config(cfgs,configfile,configfilehash,influxdbsettings);
+    end
+    println("#"^200)
+    println("SMOKE TESTS finished")
+    println("#"^200)
+    println("#"^200)
+    return true 
+end
