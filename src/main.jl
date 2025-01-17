@@ -36,6 +36,12 @@ function monitor_instance(cfg)
     space_usage_tib = round(sum(select(unique(lastactivitydf,:name),Not(:sizegb_cumsum)).sizegb)/1024, digits = 2)
     #sum(lastactivitydf.sizegb)/1024 #overstates true space usage
 
+    #print basic information
+        baseurl_info = replace(baseurl,".diro.ch"=>"")
+        baseurl_info = replace(baseurl_info,"https://"=>"")
+        baseurl_info = replace(baseurl_info,"http://"=>"")
+        println(ts3 * " - " * baseurl_info * " - Number of torrents: $(ntorrents)")
+
     if cfg.delete_torrents_if_data_threshold_is_exceeded
         ndeleted = delete_torrents_if_data_threshold_is_exceeded(baseurl,cookieDict,lastactivitydf,threshold_in_tb=THRESHOLD_IN_TIB,password=password)
         space_left_tib_until_torrent_pruning_starts = round(THRESHOLD_IN_TIB .- space_usage_tib,digits=2)
@@ -61,11 +67,7 @@ function monitor_instance(cfg)
         end
     end
 
-    baseurl_info = replace(baseurl,".diro.ch"=>"")
-    baseurl_info = replace(baseurl_info,"https://"=>"")
-    baseurl_info = replace(baseurl_info,"http://"=>"")
-
-    println(ts3 * " - " * baseurl_info * " - Number of torrents: $(ntorrents)")
+    
     println("tb_mean_over_last_n_days = $(tb_mean_over_last_n_days) TiB - ntorrents_mean_over_last_n_days = $(ntorrents_mean_over_last_n_days) - n_days = $(n_days)")
     #@show tb_mean_over_last_n_days,ntorrents_mean_over_last_n_days,n_days
     msg = "Nb. of deleted Torrents = $(ndeleted) - space used = $(space_usage_tib) TiB - space left until pruning = $(space_left_tib_until_torrent_pruning_starts) TiB - threshold = $(THRESHOLD_IN_TIB) TiB"
