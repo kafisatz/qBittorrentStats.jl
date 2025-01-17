@@ -96,8 +96,8 @@ if [ "$need_start" == "true" ] ; then
   docker run -d --restart unless-stopped -v /volume1/data:/volume1/data:rw -v /volume2/data_ssd:/volume2/data_ssd:rw -v $cfgfolder:/cfgfolder:ro -t --name $tag $tag #name sets the container name to run, tag references the image name, the last '$tag' is the image name to be run
 fi
 
-echo_title "Cleaning up --filter "label=cicd=$tag""
-docker image prune --force --filter "label=cicd=$tag"
+#echo_title "Cleaning up --filter "label=cicd=$tag""
+#docker image prune --force --filter "label=cicd=$tag"
 
 echo_title "Cleaning up docker system (docker image prune -a -f && docker container prune -f && docker system prune -f)"
 docker image prune -a -f
