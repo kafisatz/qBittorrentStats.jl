@@ -9,8 +9,8 @@ function monitor_instance(cfg)
     
     #print information
     println("#"^200)
-    ts2 = timestring()
-    ts3 = "Europe/Zurich now = $(ts2)"
+    ts,ts3 = timestring()
+    #ts3 = "Europe/Zurich now = $(ts2)"
     
     password = nothing
     if haskey(cfg,"password") 
@@ -61,8 +61,13 @@ function monitor_instance(cfg)
         end
     end
 
-    println(baseurl * " - " * ts3 * " - Number of torrents: $(ntorrents)")
-    @show tb_mean_over_last_n_days,ntorrents_mean_over_last_n_days,n_days
+    baseurl_info = replace(baseurl,".diro.ch"=>"")
+    baseurl_info = replace(baseurl_info,"https://"=>"")
+    baseurl_info = replace(baseurl_info,"http://"=>"")
+
+    println(ts3 * " - " * baseurl_info * " - Number of torrents: $(ntorrents)")
+    println("tb_mean_over_last_n_days = $(tb_mean_over_last_n_days) TiB - ntorrents_mean_over_last_n_days = $(ntorrents_mean_over_last_n_days) - n_days = $(n_days)")
+    #@show tb_mean_over_last_n_days,ntorrents_mean_over_last_n_days,n_days
     msg = "Nb. of deleted Torrents = $(ndeleted) - space used = $(space_usage_tib) TiB - space left until pruning = $(space_left_tib_until_torrent_pruning_starts) TiB - threshold = $(THRESHOLD_IN_TIB) TiB"
     println(msg)
 
@@ -216,7 +221,14 @@ function timestring()
         ts2 = ts 
     end
     #@info("Europe/Zurich now = $(ts2)")
-    return ts2  
+
+    ts2b = deepcopy(ts2)
+    #remove seconds 
+    loc = findlast(":",ts2)
+    ts2b = ts2b[1:loc[1]-1]
+    ts2b = replace(ts2b,"T"=>" ")
+
+    return ts2,ts2b
 end
 
 
