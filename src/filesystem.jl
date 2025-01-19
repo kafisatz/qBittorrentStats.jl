@@ -128,8 +128,8 @@ function daily_volume(lastactivitydf)
         return tb_mean_over_last_n_days,ntorrents_mean_over_last_n_days,nn
     end
     
-return 0.0,0
-
+    tb_mean_over_last_n_days,ntorrents_mean_over_last_n_days,nn = -99.9,-99,99
+    return tb_mean_over_last_n_days,ntorrents_mean_over_last_n_days,nn
 #tb_mean_over_last_n_days,ntorrents_mean_over_last_n_days = daily_volume(lastactivitydf)
 end
 

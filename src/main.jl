@@ -2,6 +2,7 @@
 export monitor_instance
 function monitor_instance(cfg)
     #cfg = cfgs[2]
+    #cfg = cfgs[3]
     baseurl = cfg.url
     uptimekumaurl = cfg.uptimekumaurl
     THRESHOLD_IN_TIB = cfg.THRESHOLD_IN_TIB
@@ -135,12 +136,14 @@ function getstats(baseurl::String;cookieDict=nothing,username="admin",password=n
     #size and last actitivty
     ##################################################################
     #get size and last activity
-    lastactivitydf = DataFrames.DataFrame(name=map(x->x.name,js),hash=map(x->x.hash,js),size=map(x->x.size,js),last_activity=map(x->x.last_activity,js),tracker=map(x->x.tracker,js),added_on=map(x->x.added_on,js))
+    lastactivitydf = DataFrames.DataFrame(name=map(x->x.name,js),hash=map(x->x.hash,js),size=map(x->x.size,js),last_activity=map(x->x.last_activity,js),tracker=map(x->x.tracker,js),added_on=map(x->x.added_on,js),downloaded=map(x->x.downloaded,js),uploaded=map(x->x.uploaded,js),ratio=map(x->x.ratio,js))
     sort!(lastactivitydf,[:added_on],rev=true)
     lastactivitydf.last_activity_dt = Dates.unix2datetime.(lastactivitydf.last_activity)
     lastactivitydf.added_on_dt = Dates.unix2datetime.(lastactivitydf.added_on)    
     
     lastactivitydf.sizegb = lastactivitydf.size ./ 1024 ./ 1024 ./ 1024
+    lastactivitydf.downloadedgb = lastactivitydf.downloaded ./ 1024 ./ 1024 ./ 1024
+    lastactivitydf.uploadedgb = lastactivitydf.uploaded ./ 1024 ./ 1024 ./ 1024
     #cumulate size
     lastactivitydf.sizegb_cumsum = cumsum(lastactivitydf.sizegb)
     lastactivitydf
@@ -233,7 +236,6 @@ function timestring()
     return ts2,ts2b
 end
 
-
 export smoketests
 function smoketests(cfgs,configfile,configfilehash,influxdbsettings) 
 
@@ -255,3 +257,9 @@ function smoketests(cfgs,configfile,configfilehash,influxdbsettings)
     println("")
     return true 
 end
+
+#=
+efi = raw"C:\temp\ladf.csv" 
+using CSV
+CSV.write(efi,lastactivitydf)
+=#
