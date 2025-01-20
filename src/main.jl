@@ -29,7 +29,7 @@ function monitor_instance(cfg)
         writestats(baseurl,lastactivitydf,js,influxdbbucketname,influxdbsettings,cookieDict=cookieDict,password=password)
     end
 
-    tb_mean_over_last_n_days,ntorrents_mean_over_last_n_days,n_days = daily_volume(lastactivitydf)
+    tb_mean_over_last_n_days,ntorrents_mean_over_last_n_days,n_days,sizetb_vec = daily_volume(lastactivitydf)
     
     ntorrents = size(lastactivitydf,1) 
 
@@ -68,8 +68,7 @@ function monitor_instance(cfg)
         end
     end
 
-    
-    println("tb_mean_over_last_n_days = $(tb_mean_over_last_n_days) TiB - ntorrents_mean_over_last_n_days = $(ntorrents_mean_over_last_n_days) - n_days = $(n_days)")
+    println("tb_mean_over_last_n_days = $(tb_mean_over_last_n_days) TiB - ntorrents_mean_over_last_n_days = $(ntorrents_mean_over_last_n_days) - n_days = $(n_days) - sizetb_vec = $(sizetb_vec)")
     #@show tb_mean_over_last_n_days,ntorrents_mean_over_last_n_days,n_days
     msg = "Nb. of deleted Torrents = $(ndeleted) - space used = $(space_usage_tib) TiB - space left until pruning = $(space_left_tib_until_torrent_pruning_starts) TiB - threshold = $(THRESHOLD_IN_TIB) TiB"
     println(msg)

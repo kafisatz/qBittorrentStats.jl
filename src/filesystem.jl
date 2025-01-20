@@ -125,12 +125,13 @@ function daily_volume(lastactivitydf)
         smry3 = smry[1:nn,:]
         tb_mean_over_last_n_days = round(StatsBase.mean(smry3.sizetb),digits=2)
         ntorrents_mean_over_last_n_days = trunc(Int,StatsBase.mean(smry3.torrent_count))
-        return tb_mean_over_last_n_days,ntorrents_mean_over_last_n_days,nn
+        sizetb_vec = round.(smry.sizetb,digits=2)
+        return tb_mean_over_last_n_days,ntorrents_mean_over_last_n_days,nn,sizetb_vec
     end
     
-    tb_mean_over_last_n_days,ntorrents_mean_over_last_n_days,nn = -99.9,-99,99
-    return tb_mean_over_last_n_days,ntorrents_mean_over_last_n_days,nn
-#tb_mean_over_last_n_days,ntorrents_mean_over_last_n_days = daily_volume(lastactivitydf)
+    tb_mean_over_last_n_days,ntorrents_mean_over_last_n_days,nn,sizetb_vec = -99.9,-99,99,-9.9
+    return tb_mean_over_last_n_days,ntorrents_mean_over_last_n_days,nn,sizetb_vec
+#tb_mean_over_last_n_days,ntorrents_mean_over_last_n_days,sizetb_vec = daily_volume(lastactivitydf)
 end
 
 export isfiletry
