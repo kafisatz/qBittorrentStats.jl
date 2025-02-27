@@ -31,7 +31,7 @@ function monitor_instance(cfg)
 
     tb_mean_over_last_n_days,ntorrents_mean_over_last_n_days,n_days,sizetb_vec = daily_volume(lastactivitydf)
     
-    ntorrents = size(lastactivitydf,1) 
+    ntorrents = size(lastactivitydf,1)
 
     #cross seeds only need space 'once' per torrent name!
     space_usage_tib = round(sum(select(unique(lastactivitydf,:name),Not(:sizegb_cumsum)).sizegb)/1024, digits = 2)

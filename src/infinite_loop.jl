@@ -8,7 +8,7 @@ function main_fn()
 
     cfgs,configfile,configfilehash,influxdbsettings = get_config(configfiles)
     #cfgs,configfile,configfilehash,influxdbsettings = rescan_config(cfgs,configfile,configfilehash,influxdbsettings)
-    #i=2
+    #i=3
     @assert smoketests(cfgs,configfile,configfilehash,influxdbsettings)
 
     nsecsleep = 10*60
