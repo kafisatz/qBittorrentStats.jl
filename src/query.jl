@@ -186,8 +186,6 @@ end
 
 tmp = filter(x->startswith(x.name,"Quantico.S02.COMPLETE.GERMAN"),df)
 
-tmp = filter(x->startswith(x.name,"Transformers.Aufstieg.der.Bestien.2023.German.AC3.DL.1080p.BluRay.AVC.Remux-MAMA"),df)
-
 =#
 
 export mostrecenttimestamp
