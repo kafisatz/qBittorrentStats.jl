@@ -41,7 +41,7 @@ function monitor_instance(cfg)
         baseurl_info = replace(baseurl,".diro.ch"=>"")
         baseurl_info = replace(baseurl_info,"https://"=>"")
         baseurl_info = replace(baseurl_info,"http://"=>"")
-        println(ts3 * " - " * baseurl_info * " - Number of torrents: $(ntorrents)")
+        println(baseurl_info * " - " * ts3 * " - " * " - Number of torrents: $(ntorrents)")
 
     if cfg.delete_torrents_if_data_threshold_is_exceeded
         ndeleted = delete_torrents_if_data_threshold_is_exceeded(baseurl,cookieDict,lastactivitydf,threshold_in_tb=THRESHOLD_IN_TIB,password=password)
@@ -68,9 +68,9 @@ function monitor_instance(cfg)
         end
     end
 
-    println("tb_mean_over_last_n_days = $(tb_mean_over_last_n_days) TiB - ntorrents_mean_over_last_n_days = $(ntorrents_mean_over_last_n_days) - n_days = $(n_days) - sizetb_vec = $(sizetb_vec)")
+    println("$(baseurl_info) - tb_mean_over_last_n_days = $(tb_mean_over_last_n_days) TiB - ntorrents_mean_over_last_n_days = $(ntorrents_mean_over_last_n_days) - n_days = $(n_days) - sizetb_vec = $(sizetb_vec)")
     #@show tb_mean_over_last_n_days,ntorrents_mean_over_last_n_days,n_days
-    msg = "Nb. of deleted Torrents = $(ndeleted) - space used = $(space_usage_tib) TiB - space left until pruning = $(space_left_tib_until_torrent_pruning_starts) TiB - threshold = $(THRESHOLD_IN_TIB) TiB"
+    msg = "$(baseurl_info) - Nb. of deleted Torrents = $(ndeleted) - space used = $(space_usage_tib) TiB - space left until pruning = $(space_left_tib_until_torrent_pruning_starts) TiB - threshold = $(THRESHOLD_IN_TIB) TiB"
     println(msg)
 
 return nothing 
