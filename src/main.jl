@@ -41,7 +41,7 @@ function monitor_instance(cfg)
         baseurl_info = replace(baseurl,".diro.ch"=>"")
         baseurl_info = replace(baseurl_info,"https://"=>"")
         baseurl_info = replace(baseurl_info,"http://"=>"")
-        println(baseurl_info * " - " * ts3 * " - " * " - Number of torrents: $(ntorrents)")
+        println(baseurl_info * " - " * ts3 * " - Number of torrents: $(ntorrents)")
 
     if cfg.delete_torrents_if_data_threshold_is_exceeded
         ndeleted = delete_torrents_if_data_threshold_is_exceeded(baseurl,cookieDict,lastactivitydf,threshold_in_tb=THRESHOLD_IN_TIB,password=password)
