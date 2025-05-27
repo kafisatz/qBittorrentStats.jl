@@ -63,6 +63,7 @@ function delete_torrents_without_data_and_data_without_torrents_fn(baseurl,dir,l
         if size(hashes_to_delete,1) > ntorrents_to_delete_threshold
             nt = length(hashes_to_delete)
             @warn("Not deleting any torrents. Analysis indicates that $(nt) torrents have no underlying data. Please review manually")
+            @show filter(x->in(x.hash,hashes_to_delete), lastactivitydf).name            
         else 
             ndeleted = 0
             for h in hashes_to_delete
