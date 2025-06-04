@@ -3,18 +3,16 @@
 [![Build Status](https://github.com/kafisatz/qBittorrentStats.jl/actions/workflows/CI.yml/badge.svg?branch=master)](https://github.com/kafisatz/qBittorrentStats.jl/actions/workflows/CI.yml?query=branch%3Amaster)
 
 ## Purpose
-* Gathers upload and download information (per torrent) from a qBittorrent client via WebUI API (https://github.com/qbittorrent/qBittorrent/wiki/#webui-api)
-* Data is written to InfluxDBv2
+* Gathers data (per torrent) from a qBittorrent client via WebUI API (https://github.com/qbittorrent/qBittorrent/wiki/#webui-api)
+* writes summary statistics to docker log
+* Data is optionally written to InfluxDBv2
 
 ## Requirements 
 * InfluxDBv2 instance 
-* A qBittorrent client with WebUI API enabled. I think this is usually the case when you have the WebUI enabled.
+* A qBittorrent client with WebUI API enabled.
 
 ## Limitations 
 * For me this is currently not working when I use a https URL (reverse proxy). Instead I am using the IP of the client
-
-## Grafana Dashboard
-* see [grafana_dashboard.json](graphana_dashboard.json) and [dashboard.png](img/dashboard.png)
 
 ## Usage
 ```julia
@@ -39,8 +37,9 @@ influxdbsettings = InfluxDBClient.get_settings()
 #Make sure this bucket is first created. Otherwise you will get a warning message and no data will be written
 influxdbbucketname = "qBittorrentStats"
 
-#there is a single function which gathers the data from qBittorrent and writes it to InfluxDB
-@time cookieDict,lastactivitydf = writestats(baseurl,influxdbbucketname,influxdbsettings)
+lastactivitydf,js,cookieDict = getstats(baseurl,password=password);
+
+#lastactivitydf is a dataframe which contains the information for each torrent
 
 #the data is gathered via https://github.com/qbittorrent/qBittorrent/wiki/WebUI-API-(qBittorrent-4.1)#get-torrent-generic-properties
 #see the property list on that page
