@@ -57,8 +57,8 @@ echo_title need_build=$need_build
 status=$(docker ps | grep -w $tag | grep -E "Up|running" || true)
 echo_title status=$status
 
-#we want to STOP and RESTART the container even if no rebuild was done
-#if [ "$need_build" == "true" ] ; then
+#do we want to STOP and RESTART the container even if no rebuild was done?
+if [ "$need_build" == "true" ] ; then
   if [ ! -z "$status" ] ; then
     containerid=$(echo $status | grep -oP "^\S+")
     echo_title containerid=$containerid
@@ -73,9 +73,9 @@ echo_title status=$status
   #alternative command that produces a warning/'error', but works just fine
   #docker stop $tag || true && docker rm $tag || true
   need_start=true
-#elif [ -z "$status" ] ; then
-#  need_start=true
-#fi
+elif [ -z "$status" ] ; then
+  need_start=true
+fi
 
 cfgfolder="/volume1/data/configs"
 echo_title cfgfolder=$cfgfolder
