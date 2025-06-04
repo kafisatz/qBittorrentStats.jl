@@ -44,7 +44,7 @@ function monitor_instance(cfg)
         println(baseurl_info * " - " * ts3 * " - Number of torrents: $(ntorrents)")
 
     if cfg.delete_torrents_if_data_threshold_is_exceeded
-        ndeleted = delete_torrents_if_data_threshold_is_exceeded(baseurl,cookieDict,lastactivitydf,threshold_in_tb=THRESHOLD_IN_TIB,password=password)
+        ndeleted = delete_torrents_if_data_threshold_is_exceeded(baseurl_info,baseurl,cookieDict,lastactivitydf,threshold_in_tb=THRESHOLD_IN_TIB,password=password)
         space_left_tib_until_torrent_pruning_starts = round(THRESHOLD_IN_TIB .- space_usage_tib,digits=2)
     else 
         ndeleted = 0
