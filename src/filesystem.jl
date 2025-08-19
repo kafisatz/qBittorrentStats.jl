@@ -19,6 +19,14 @@ function delete_torrents_without_data_and_data_without_torrents_fn(baseurl,dir,l
 
     ####################################################################################################
     data_but_no_torrent = setdiff(rs2,df.name)
+    #=
+        #manually delete folders
+        data_but_no_torrent_22 = map(x->joinpath(dir,x),data_but_no_torrent)
+        data_but_no_torrent_23 = filter(isdir,data_but_no_torrent_22)
+        map(x->splitdir(x)[2],data_but_no_torrent_23)
+        #careful with this!
+        #map(x->rm(x,recursive=true),data_but_no_torrent_23)
+    =#
 
     #filter data_but_no_torrent
         #very new torrents may not yet have data on disk!
@@ -55,6 +63,9 @@ function delete_torrents_without_data_and_data_without_torrents_fn(baseurl,dir,l
     ################################################################################
 
     df_torrent_without_data = filter(x->x.name in torrent_without_data,lastactivitydf)
+    #ignore rows which were recently added (we need a few hours to 'gather' data)
+    n_minutes = 60 * 4 #note, UTC vs CET can also cause a few hours of difference here (2?)
+    filter!(x->x.added_on_dt < now() - Minute(n_minutes),df_torrent_without_data)
 
     if size(df_torrent_without_data,1) > 0
         #StatsBase.countmap(map(x->x[1:min(length(x),15)],df_torrent_without_data.tracker))        
