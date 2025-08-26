@@ -11,6 +11,8 @@ export delete_torrents_without_data_and_data_without_torrents_fn
 function delete_torrents_without_data_and_data_without_torrents_fn(baseurl,dir,lastactivitydf,cookieDict;password=password,ntorrents_to_delete_threshold=10,data_to_delete_without_torrent_threshold_tib=1.0)
     
     #ntorrents_to_delete_threshold=10;data_to_delete_without_torrent_threshold_tib=1.0
+    
+    #dir = filter(isdirtry,data_dirs)[1]
     rs,rs2 = read_files(dir)
 
     df = unique(lastactivitydf,:name)

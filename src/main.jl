@@ -3,6 +3,7 @@ export monitor_instance
 function monitor_instance(cfg)
     #cfg = cfgs[2]
     #cfg = cfgs[3]
+    #cfg = cfgs[4]
     baseurl = cfg.url
     uptimekumaurl = cfg.uptimekumaurl
     THRESHOLD_IN_TIB = cfg.THRESHOLD_IN_TIB
